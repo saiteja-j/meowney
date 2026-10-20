@@ -1,67 +1,60 @@
-# Meowney: install on your Android phone
+# Meowney
 
-This folder is your app. It works with no sign-in and no internet once installed.
-Your entries, bills and settings are stored only on your phone. Nothing is sent anywhere.
+A small, private money tracker for your phone, with a pet that reacts to what you spend.
 
-## Part 1: Put the app on a free web address (about 10 minutes, on a computer)
+**Open it here:** https://saiteja-j.github.io/meowney/
 
-You need a computer for this part, because uploading folders is awkward on a phone.
+No account. No server. No ads. Your entries live **only on your phone**, so make a backup now and then (see below).
 
-1. Unzip this file. You should see: index.html, manifest.webmanifest, sw.js, and the folders icons and fonts.
-2. Go to github.com and create a free account (or sign in).
-3. Click the + at the top right, then New repository.
-   - Repository name: anything you like, for example meowney (it becomes part of the web address)
-   - Choose Public (free web hosting needs this).
-   - Click Create repository.
-4. On the new empty page, click the link that says "uploading an existing file".
-5. Drag in everything from the unzipped folder: index.html, manifest.webmanifest, sw.js, the icons folder and the fonts folder.
-   Wait until every file has finished uploading, then click Commit changes.
-6. Click Settings (top of the repository), then Pages (left side).
-   - Under Build and deployment, set Source to "Deploy from a branch".
-   - Branch: main, folder: / (root). Click Save.
-7. Wait 1 to 3 minutes and refresh that page. A web address appears at the top, like:
-   https://YOUR-USERNAME.github.io/YOUR-REPOSITORY-NAME/
-8. Open that address on your phone to check it loads.
+## Install on Android
 
-The files are public at that address, but they contain no personal data. Your entries never leave your phone.
-GitHub's screens change now and then, so button names may differ a little.
+1. Open the link above in Chrome.
+2. Tap the three dots, then **Install app** (or **Add to Home screen**).
+3. Open Meowney from your home screen. A short tour starts the first time.
 
-## Part 2: Install it on your phone
+It works offline once opened.
 
-1. Open the address in Chrome on your Android phone.
-2. Tap the three dots menu, then "Install app" (or "Add to Home screen").
-3. Open Meowney from your home screen. It now works offline.
+## What you can do
 
-## Part 3 (optional): Make a real APK file
+- **Add an entry in seconds:** amount, category, account, note, tags, bill photos, repeat.
+- **Home:** this month's spending against your budget, how it compares with the same days last month, and a ring showing where the money went. Your pet greets you when you open the app and peeks over the card to talk. Tap the pet for another note.
+- **Entries:** browse by month, search, bulk edit, trash with undo. The pet and a one-line note sit in the month card.
+- **Budgets:** one monthly number and optional category budgets. The pet rides each progress bar and reacts to your pace.
+- **Insights:** a scorecard you choose (4 of 9), spending by category with month-by-month detail, fixed vs flexible, day of week, "was it worth it", and a weekly pet recap you can replay.
+- **Pets:** cat, panda, penguin or puppy. Pick one or several (a different one greets you each time). Choose a personality: sassy, sweet, funny, bossy, mixed, or silent.
+- **CSV:** import bank statements, export your entries for a spreadsheet.
+- **Backup and restore:** one file with everything, including bill photos.
+- **Light and dark mode.** Rupees by default, other currencies supported.
 
-Only do this if you specifically want an APK. Installing from Chrome (Part 2) is simpler and works the same.
+## Back up your data
 
-1. On a computer, go to pwabuilder.com and paste your web address from Part 1. Click Start.
-2. Click "Package for stores", then choose Android and generate the package.
-3. Leave the signing key on "New". PWABuilder makes one and puts it in the download.
-   Keep that key file somewhere safe. You need it for future updates.
-4. Download the package, unzip it, and find the .apk file.
-5. Send the APK to your phone. Android will ask you to allow installs from this source (Settings, then "Install unknown apps" for the app you opened it with). It may also show a security warning, because the app isn't from the Play Store.
+Open **Settings, then Back up everything**. Keep the file somewhere safe (Drive, email to yourself). To restore, use **Settings, then Restore from backup**. Back up before each update.
 
-I'm not sure whether an APK install and the Chrome install share the same data, so choose one and use only that.
+*Export entries as CSV* is for spreadsheets only. It does not save your categories, budgets, settings or bill photos, so it is not a backup.
 
-## Keep your data safe
+## Updating
 
-- Your data lives only on this phone. If you uninstall the app, clear its data, or lose the phone, it is gone.
-- In the app, open Settings and tap "Back up everything". It saves one file with your entries, settings and bills.
-- Save that file somewhere safe (Google Drive, email it to yourself). Do this about once a month.
-- To move to a new phone, or to recover, install the app there and use "Restore from backup".
-- You can also move your data from the Claude-hosted version: use its "Back up everything", then restore the file in this app. Bills from that version don't come across.
+This repository holds the finished app, with no build step. To update, replace the changed files and commit. After an update, open the app twice: the first open can still show the old version while the new one downloads. If the home-screen icon does not change, remove the app and install it again (back up first).
 
-## Updating the app later
+## Files
 
-Replace the files in your GitHub repository with new ones (Add file, then Upload files). Open the app while online and it updates itself. Your data is not touched.
+| File | What it is |
+|---|---|
+| `index.html` | The whole app (pictures and code are inside it) |
+| `sw.js` | Lets the app work offline and pick up updates |
+| `manifest.webmanifest` | Name, colours and icons for installing |
+| `icon-192.png`, `icon-512.png`, `icon-maskable-512.png` | App icons |
+| `dmsans.woff2`, `fredoka.woff2` | Fonts |
+| `README.md` | This file |
 
-## The cat and its greetings
+## Privacy
 
-Every time you open the app, the cat says something based on the time, the date and your recent entries. Tap the x to dismiss it. Pick Sassy, Sweet or Silent under Settings, then Pet reactions. Silent turns the greeting off.
+Everything stays in your browser's storage on your device. Nothing is sent anywhere. Clearing the site's data or uninstalling the app erases your entries, so keep a backup.
 
-## What is different from the Claude-hosted version
+## Credits
 
-- No AI "Read from bill". You type bill details yourself. Photos and PDFs still attach and are stored on your phone.
-- No sync between phones. Each person installs their own copy with their own data.
+Icons from [Lucide](https://lucide.dev) (ISC licence). Fonts: DM Sans and Fredoka (SIL Open Font Licence). Pet illustrations were made for this project.
+
+## Status
+
+Built and tested in a desktop browser engine and an automated test suite. It has not been tested on every phone, so if something looks off on yours, note the screen and the phone model.

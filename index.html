@@ -278,6 +278,51 @@ img.pet{display:block;-webkit-user-drag:none;user-select:none;pointer-events:non
 .st-foot{display:flex;justify-content:space-between;align-items:center;width:100%;min-height:48px}
 .st-foot .link{color:inherit;text-decoration:underline}
 
+/* ===== v10: greeting note, tour, pets on bars, Entries note, scorecard pets ===== */
+.petbtn{border:0;background:none;padding:0;cursor:pointer;flex:none;min-width:44px;min-height:44px;color:inherit}
+.gstrip{position:relative;height:var(--gh,64px);margin:-4px 0 6px;display:flex;justify-content:flex-end}
+.gstrip.gout{height:0;margin-bottom:0}
+.gnote{position:relative;margin-right:100px;margin-top:2px;align-self:flex-start;max-width:72%;background:var(--peach);color:var(--ink);border-radius:20px;padding:10px 44px 10px 14px;font:600 16px/1.25 'Fredoka','DM Sans',sans-serif;box-shadow:0 2px 8px rgba(20,33,61,.12);transform-origin:100% 50%}
+.gtail{position:absolute;right:-7px;top:40px;width:16px;height:16px;background:var(--peach);transform:rotate(45deg);border-radius:3px}
+.gx{position:absolute;right:0;top:0;width:44px;height:44px;border:0;background:none;color:var(--ink);display:flex;align-items:center;justify-content:center;padding:0}
+.gx span{width:28px;height:28px;border-radius:50%;background:var(--soft);display:flex;align-items:center;justify-content:center}
+.gstrip.gout .gnote{clip-path:inset(0 0 0 100%)}
+.hero.peek .petbtn{transform:translateY(-62px)}
+@keyframes gs-in{from{height:0;margin-bottom:0}to{height:var(--gh,64px);margin-bottom:6px}}
+@keyframes gs-out{from{height:var(--gh,64px);margin-bottom:6px}to{height:0;margin-bottom:0}}
+@keyframes gn-in{0%,35%{clip-path:inset(0 0 0 100%);transform:scale(1)}80%{clip-path:inset(0 0 -12px 0);transform:scale(1.04)}100%{clip-path:inset(0 0 -12px 0);transform:scale(1)}}
+@keyframes gn-out{0%{clip-path:inset(0 0 -12px 0)}100%{clip-path:inset(0 0 0 100%)}}
+@keyframes pet-up{0%{transform:translateY(0)}55%{transform:translateY(-72px)}100%{transform:translateY(-62px)}}
+@keyframes pet-down{0%{transform:translateY(-62px)}30%{transform:translateY(-70px)}100%{transform:translateY(0)}}
+.gstrip.go.gin{animation:gs-in .6s cubic-bezier(.3,.7,.3,1) both}
+.gstrip.go.gin .gnote{animation:gn-in .75s .3s cubic-bezier(.3,.7,.3,1) both}
+.gstrip.go.gout{animation:gs-out .6s .35s ease-in both}
+.gstrip.go.gout .gnote{animation:gn-out .45s ease-in both}
+.hero.go.peek .petbtn{animation:pet-up .6s cubic-bezier(.3,.7,.3,1) both}
+.hero.go.unpeek .petbtn{animation:pet-down .7s .3s cubic-bezier(.3,.7,.3,1) both}
+[data-pm="off"] .gstrip,[data-pm="off"] .gstrip .gnote,[data-pm="off"] .hero .petbtn{animation:none!important}
+.tpk{min-height:96px;border-radius:18px;border:2px solid rgba(255,255,255,.35);background:rgba(255,255,255,.14);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;position:relative;font:600 12px 'DM Sans',sans-serif;padding:0}
+.tpk.on{background:#fff;color:#14213D;border-color:#fff}
+.tk{position:absolute;top:5px;right:5px;width:20px;height:20px;border-radius:50%;background:var(--primary);color:var(--on-primary);display:flex;align-items:center;justify-content:center;font-style:normal}
+.tpers{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.tper{min-height:44px;padding:0 16px;border-radius:999px;border:1px solid rgba(255,255,255,.5);background:rgba(255,255,255,.14);color:#fff;font:700 14px 'DM Sans',sans-serif}
+.tper.on{background:#fff;color:#4F46E5}
+.tfab{display:flex;align-items:center;gap:14px}
+.tfab>span{width:68px;height:68px;border-radius:50%;background:var(--orange);color:var(--on-orange);display:flex;align-items:center;justify-content:center}
+.tfab>div{background:rgba(255,255,255,.75);color:#14213D;border-radius:16px;padding:10px 14px;text-align:left;font-size:14px}
+.tring{width:150px;height:150px;border-radius:50%;background:conic-gradient(#4F46E5 0 27%,#F2623D 27% 45%,#0E9F8E 45% 60%,#C2306A 60% 74%,#C77700 74% 87%,#2B7FD1 87% 100%);display:flex;align-items:center;justify-content:center}
+.tring>div{width:100px;height:100px;border-radius:50%;background:var(--tb2);color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.tbar{width:100%;padding-top:30px}.tbar .trk{position:relative;height:16px;border-radius:999px;background:rgba(127,127,127,.25)}
+.tbar .trk i{display:block;width:78%;height:100%;border-radius:999px;background:var(--orange)}.tbar .trk b{position:absolute;left:62%;top:-4px;bottom:-4px;width:3px;background:currentColor;border-radius:2px}
+.tbar .trk span{position:absolute;left:78%;top:-36px;transform:translateX(-50%)}.tbar .row{font-size:13px;margin-top:8px}
+.tbtns{width:100%;display:flex;flex-direction:column;gap:12px}
+.story .tnext{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}.story.s0 .tnext{background:#fff;color:#4F46E5;border-color:#fff}
+.bpet{position:absolute;transform:translateX(-50%);z-index:2;pointer-events:none}
+.entnote{background:var(--peach);color:var(--ink);border-radius:16px;padding:10px 14px;font:600 16px/1.3 'Fredoka','DM Sans',sans-serif}
+.iv-tile{position:relative}.iv-tile .iv-l{padding-right:54px;min-height:34px;align-items:flex-start}
+.iv-pet{position:absolute;top:10px;right:10px;width:48px;height:48px}
+.iv-pet .pb{position:absolute;left:-8px;bottom:-4px;width:24px;height:24px;border-radius:50%;background:var(--card);color:var(--ink);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 2px currentColor}
+
 </style>
 </head>
 <body>
@@ -1053,7 +1098,6 @@ function ringGradient(slots, total) {
 }
 function homeInsights() {
   const out = []; const t = todayStr(), key = mk(t); const dom = Number(t.slice(8, 10)), dim = daysIn(key); const list = baseEntries(); const budget = S.app.settings.budget;
-  if (S.greet) out.push({ mood: S.greet.mood, text: S.greet.text, kind: 'greet' });
   const mlist = list.filter((e) => mk(e.date) === key); const spent = spendOf(mlist); const c = sameDateCompare();
   const prevList = inRange(list, c.prev + '-01', c.prev + '-' + pad2(c.dd)); const cc = byCat(mlist), pc = byCat(prevList);
   const ch = Object.keys(cc).filter((id) => pc[id] >= 500 && cc[id] >= 500).map((id) => ({ id, p: Math.round(((cc[id] - pc[id]) / pc[id]) * 100) })).filter((x) => Math.abs(x.p) >= 15).sort((a, b) => Math.abs(b.p) - Math.abs(a.p))[0];
@@ -1171,14 +1215,14 @@ function vEntries() {
   const spent = spendOf(ml), income = incomeOf(ml); let chip = '';
   if (key === cur) { const c = sameDateCompare(); if (c.prevSame > 0) { const d = c.diff; chip = '<div class="chipamber ' + (Math.abs(d) <= c.prevSame * 0.1 ? 'chipflat' : d > 0 ? '' : 'chipgood') + '" style="align-self:flex-start">' + ico(d > 0 ? 'up' : 'dn', 12, ' style="stroke-width:2.6"') + '<span>' + fmt(Math.abs(d), { round: true }) + (d > 0 ? ' more' : ' less') + ' than by ' + c.prevLabel + '</span></div>'; } }
   else { const pk = addMonths(key, -1); const ps = monthSpend(pk, list); if (ps > 0) { const d = spent - ps; chip = '<div class="chipamber ' + (Math.abs(d) <= ps * 0.1 ? 'chipflat' : d > 0 ? '' : 'chipgood') + '" style="align-self:flex-start"><span>' + fmt(Math.abs(d), { round: true }) + (d > 0 ? ' more' : ' less') + ' than ' + monShort(pk) + '</span></div>'; } }
-  const card = '<div class="hero monthcard" data-swipe="1" style="gap:8px;padding:14px 16px 16px"><div class="row between"><button class="ibtn" style="background:var(--hero-soft);border:0;color:var(--on-hero)" data-act="emonth" data-d="-1" aria-label="Previous month">' + ico('back') + '</button><button class="link" style="color:var(--on-hero);font-family:Fredoka,sans-serif;font-size:18px;font-weight:600;min-width:0" data-act="sheet" data-s="month">' + monthLabel(key) + ico('down', 18) + '</button><button class="ibtn" style="background:var(--hero-soft);border:0;color:var(--on-hero)" data-act="emonth" data-d="1" aria-label="Next month"' + (key >= cur ? ' disabled style="opacity:.4;background:var(--hero-soft);border:0;color:var(--on-hero)"' : '') + '>' + ico('fwd') + '</button></div><div><div class="small hm">' + (key === cur ? 'Spent so far' : 'Spent') + '</div><div class="amtmid">' + fmt(spent, { round: true }) + '</div></div>' + chip + '<div class="row" style="border-top:1px solid var(--hero-soft);padding-top:10px"><div class="grow"><div class="xs hm">Income</div><div class="fd">' + fmt(income, { round: true }) + '</div></div><div class="grow"><div class="xs hm">Net</div><div class="fd">' + fmt(income - spent, { round: true }) + '</div></div><div class="grow"><div class="xs hm">Entries</div><div class="fd">' + ml.length + '</div></div></div></div>';
+  const card = '<div class="hero monthcard" data-swipe="1" style="gap:8px;padding:14px 16px 16px"><div class="row between"><button class="ibtn" style="background:var(--hero-soft);border:0;color:var(--on-hero)" data-act="emonth" data-d="-1" aria-label="Previous month">' + ico('back') + '</button><button class="link" style="color:var(--on-hero);font-family:Fredoka,sans-serif;font-size:18px;font-weight:600;min-width:0" data-act="sheet" data-s="month">' + monthLabel(key) + ico('down', 18) + '</button><button class="ibtn" style="background:var(--hero-soft);border:0;color:var(--on-hero)" data-act="emonth" data-d="1" aria-label="Next month"' + (key >= cur ? ' disabled style="opacity:.4;background:var(--hero-soft);border:0;color:var(--on-hero)"' : '') + '>' + ico('fwd') + '</button></div><div class="row between" style="align-items:flex-start;gap:8px"><div class="grow" style="min-width:0"><div class="small hm">' + (key === cur ? 'Spent so far' : 'Spent') + '</div><div class="amtmid">' + fmt(spent, { round: true }) + '</div></div><div style="flex:none">' + pmCat(entMood(spent, key), 64, 'ent:' + key + ':' + entMood(spent, key), true) + '</div></div>' + chip + '<div class="row" style="border-top:1px solid var(--hero-soft);padding-top:10px"><div class="grow"><div class="xs hm">Income</div><div class="fd">' + fmt(income, { round: true }) + '</div></div><div class="grow"><div class="xs hm">Net</div><div class="fd">' + fmt(income - spent, { round: true }) + '</div></div><div class="grow"><div class="xs hm">Entries</div><div class="fd">' + ml.length + '</div></div></div></div>';
   const yr = key.slice(0, 4); const vals = []; for (let m = 1; m <= 12; m++) { const k = yr + '-' + pad2(m); vals.push({ k, v: k > cur ? -1 : monthSpend(k, list) }); }
   const mx = Math.max(1, ...vals.map((x) => x.v)); const ytd = sum(vals.filter((x) => x.v > 0), (x) => x.v);
   const bars = '<div class="card" style="gap:4px;padding:12px 10px 8px"><div class="row between" style="padding:0 6px"><div class="fd" style="font-size:16px">' + yr + ' <span class="muted small" style="font-family:\'DM Sans\',sans-serif;font-weight:400">· ' + fmt(ytd, { round: true }) + (yr === cur.slice(0, 4) ? ' so far' : '') + '</span></div><button class="link" style="min-height:32px" data-act="sheet" data-s="month">Pick month</button></div><div class="bars" style="height:104px">' + vals.map((x) => '<button aria-label="' + monShort(x.k) + ', ' + (x.v < 0 ? 'no entries yet' : fmt(x.v, { round: true })) + '" ' + (x.v < 0 ? 'disabled' : 'data-act="ybar" data-k="' + x.k + '"') + ' style="height:104px"><i class="' + (x.k === key ? 'on' : '') + '" style="height:' + (x.v < 0 ? 6 : Math.max(4, Math.round((x.v / mx) * 70))) + 'px"></i><span class="' + (x.k === key ? 'on' : '') + '">' + monShort(x.k).slice(0, 1) + '</span></button>').join('') + '</div></div>';
   const f = S.ui.filters; const nf = (f.cats.length ? 1 : 0) + (f.prof ? 1 : 0) + (f.tag ? 1 : 0) + (f.bill ? 1 : 0) + (f.review ? 1 : 0) + (f.type ? 1 : 0);
   const tools = '<div class="row" style="gap:8px"><div class="grow" style="position:relative"><input id="q" class="in" type="search" placeholder="Search note, category or tag" aria-label="Search entries" value="' + esc(S.ui.search) + '"></div><button class="ibtn' + (nf ? '' : '') + '" data-act="sheet" data-s="filter" aria-label="Filters"' + (nf ? ' style="background:var(--primary);color:var(--on-primary);border:0"' : '') + '>' + ico('sliders') + '</button></div>';
   const strip = nf ? '<div class="row between"><span class="small muted">' + nf + (nf === 1 ? ' filter is on' : ' filters are on') + '</span><button class="link" data-act="ftclear">Clear</button></div>' : '';
-  return '<div class="row between"><h1 class="title">Entries</h1><div class="row" style="gap:8px"><button class="btn sm' + (S.sel ? ' soft' : '') + '" data-act="selmode">' + (S.sel ? 'Done' : 'Select') + '</button>' + (S.sel ? '' : '<button class="btn sm" data-act="go" data-v="trash">Trash' + (trashed().length ? ' (' + trashed().length + ')' : '') + '</button>') + '</div></div>' + banners() + card + (key === cur ? '<div class="xs muted" style="text-align:center;margin-top:-6px">Swipe the card for other months</div>' : '') + bars + tools + strip + '<div id="elist" class="col" style="gap:8px">' + entriesListHtml(key) + '</div>' + (S.sel ? '<div style="height:130px"></div>' : '');
+  return '<div class="row between"><h1 class="title">Entries</h1><div class="row" style="gap:8px"><button class="btn sm' + (S.sel ? ' soft' : '') + '" data-act="selmode">' + (S.sel ? 'Done' : 'Select') + '</button>' + (S.sel ? '' : '<button class="btn sm" data-act="go" data-v="trash">Trash' + (trashed().length ? ' (' + trashed().length + ')' : '') + '</button>') + '</div></div>' + banners() + card + (key === cur ? '<div class="xs muted" style="text-align:center;margin-top:-6px">Swipe the card for other months</div>' : '') + entNote(key, list) + bars + tools + strip + '<div id="elist" class="col" style="gap:8px">' + entriesListHtml(key) + '</div>' + (S.sel ? '<div style="height:130px"></div>' : '');
 }
 
 /* ---------- BUDGETS ---------- */
@@ -1189,9 +1233,9 @@ function vBudgets() {
   const bc = byCat(ml); const cats = S.app.cats.filter((c) => !c.archived || c.budget > 0); const withB = cats.filter((c) => c.budget > 0).map((c) => ({ c, s: bc[c.id] || 0, p: Math.round(((bc[c.id] || 0) / c.budget) * 100) })).sort((a, b) => b.p - a.p);
   const assigned = sum(withB, (x) => x.c.budget); const noB = cats.filter((c) => !c.budget && !c.archived);
   let top;
-  if (budget > 0) { const p = Math.round((spent / budget) * 100); const st = budgetStatus(p, pace); const perDay = isCur && left > 0 && budget > spent ? Math.round((budget - spent) / left) : 0; top = '<div class="row between"><div class="small muted">Monthly budget</div><button class="link" data-act="bedit" data-id="overall">Edit</button></div><div class="row wrap" style="align-items:baseline;gap:8px"><div class="amtmid">' + fmt(spent, { round: true }) + '</div><div class="muted">of ' + fmt(budget, { round: true }) + '</div></div><div class="bar big"><i style="width:' + Math.min(p, 100) + '%"></i>' + (pace != null ? '<b style="left:' + pace + '%"></b>' : '') + '</div><div class="row between small muted" style="gap:8px"><span>' + p + '% used</span>' + (pace != null ? '<span>' + pace + '% of the month gone</span>' : '') + '</div><div class="row wrap" style="gap:10px"><span class="pill ' + st[0] + '">' + st[1] + '</span>' + (perDay ? '<span class="small muted">' + fmt(perDay, { round: true }) + ' a day for ' + left + ' more days</span>' : '') + '</div><div class="xs muted">' + (pace != null ? 'Dark marker = even pace. ' : '') + (assigned ? fmt(Math.max(0, budget - assigned), { round: true }) + ' not assigned to a category.' : 'No category budgets yet.') + '</div>'; }
+  if (budget > 0) { const p = Math.round((spent / budget) * 100); const st = budgetStatus(p, pace); const perDay = isCur && left > 0 && budget > spent ? Math.round((budget - spent) / left) : 0; top = '<div class="row between"><div class="small muted">Monthly budget</div><button class="link" data-act="bedit" data-id="overall">Edit</button></div><div class="row wrap" style="align-items:baseline;gap:8px"><div class="amtmid">' + fmt(spent, { round: true }) + '</div><div class="muted">of ' + fmt(budget, { round: true }) + '</div></div>' + petBar(Math.min(p, 100), p, pace, true) + '<div class="row between small muted" style="gap:8px"><span>' + p + '% used</span>' + (pace != null ? '<span>' + pace + '% of the month gone</span>' : '') + '</div><div class="row wrap" style="gap:10px"><span class="pill ' + st[0] + '">' + st[1] + '</span>' + (perDay ? '<span class="small muted">' + fmt(perDay, { round: true }) + ' a day for ' + left + ' more days</span>' : '') + '</div><div class="xs muted">' + (pace != null ? 'Dark marker = even pace. ' : '') + (assigned ? fmt(Math.max(0, budget - assigned), { round: true }) + ' not assigned to a category.' : 'No category budgets yet.') + '</div>'; }
   else top = '<div class="h3 fd">No monthly budget yet</div><div class="small muted">Set one number for the month, then optionally split it across categories.</div><button class="btn primary" style="align-self:flex-start;min-height:48px;font-size:16px" data-act="bedit" data-id="overall">Set monthly budget</button>';
-  const rows = withB.map((x) => { const st = budgetStatus(x.p, pace); return '<button class="li" style="align-items:flex-start;padding:11px 0" data-act="bedit" data-id="' + esc(x.c.id) + '">' + tileH(x.c) + '<div class="grow col" style="gap:5px"><div class="row between" style="gap:8px"><div class="ell" style="font-weight:700;font-size:15px">' + esc(x.c.name) + '</div><span class="pill sm ' + st[0] + '" style="flex:none">' + st[1] + '</span></div><div class="bar" style="--c:' + x.c.color + '"><i style="width:' + Math.min(x.p, 100) + '%"></i>' + (pace != null ? '<b style="left:' + pace + '%"></b>' : '') + '</div><div class="xs muted">' + fmt(x.s, { round: true }) + ' of ' + fmt(x.c.budget, { round: true }) + ' · ' + x.p + '%</div></div></button>'; }).join('');
+  const rows = withB.map((x) => { const st = budgetStatus(x.p, pace); return '<button class="li" style="align-items:flex-start;padding:11px 0" data-act="bedit" data-id="' + esc(x.c.id) + '">' + tileH(x.c) + '<div class="grow col" style="gap:5px"><div class="row between" style="gap:8px"><div class="ell" style="font-weight:700;font-size:15px">' + esc(x.c.name) + '</div><span class="pill sm ' + st[0] + '" style="flex:none">' + st[1] + '</span></div>' + petBar(Math.min(x.p, 100), x.p, pace, false, x.c.color) + '<div class="xs muted">' + fmt(x.s, { round: true }) + ' of ' + fmt(x.c.budget, { round: true }) + ' · ' + x.p + '%</div></div></button>'; }).join('');
   return '<div class="row between"><h1 class="title">Budgets</h1><div class="row" style="gap:6px"><button class="ibtn" data-act="bmonth" data-d="-1" aria-label="Previous month">' + ico('back') + '</button><button class="ibtn" data-act="bmonth" data-d="1" aria-label="Next month"' + (key >= cur ? ' disabled style="opacity:.4"' : '') + '>' + ico('fwd') + '</button></div></div><div class="small muted" style="margin-top:-8px">' + monthLabel(key) + '</div>' + banners() + '<div class="card">' + top + '</div><div class="row between"><h2 class="h3">By category</h2><button class="link" data-act="go" data-v="cats">Manage categories</button></div>' + (withB.length ? '<div class="card flush list">' + rows + '</div>' : '<div class="card empty"><div class="small muted">No category budgets yet. Tap a category below to set one.</div></div>') + (noB.length ? '<div class="col"><div class="lbl">Add a budget</div><div class="chips">' + noB.map((c) => '<button class="chip" data-act="bedit" data-id="' + esc(c.id) + '">' + ico(c.icon, 16) + esc(c.name) + '</button>').join('') + '</div></div>' : '');
 }
 
@@ -1314,7 +1358,7 @@ function vProfiles() {
 }
 function vSettings() {
   const s = S.app.settings; const link = (ic, t, sub, act, v) => '<button class="li" data-act="' + act + '"' + (v ? ' data-v="' + v + '" data-s="' + v + '"' : '') + '><span class="tile">' + ico(ic, 20) + '</span><div class="grow"><div style="font-weight:500">' + t + '</div>' + (sub ? '<div class="xs muted">' + sub + '</div>' : '') + '</div>' + ico('fwd', 18) + '</button>';
-  return backH('Settings') + '<div class="card flush list">' + link('user', 'Profiles and sharing', S.app.profiles.length + (S.app.profiles.length === 1 ? ' profile' : ' profiles'), 'go', 'profiles') + link('pie', 'Categories', S.app.cats.filter((c) => !c.archived).length + ' categories', 'go', 'cats') + link('paw', 'Pet reactions', modeName2(), 'go', 'pet') + link('wallet', 'Accounts', S.app.accounts.join(', '), 'sheet', 'accounts') + '</div>' +
+  return backH('Settings') + '<div class="card flush list">' + link('user', 'Profiles and sharing', S.app.profiles.length + (S.app.profiles.length === 1 ? ' profile' : ' profiles'), 'go', 'profiles') + link('pie', 'Categories', S.app.cats.filter((c) => !c.archived).length + ' categories', 'go', 'cats') + link('paw', 'Pet reactions', modeName2(), 'go', 'pet') + link('sparkles', 'App tour', 'Watch the 5-card tour again', 'tourstart', '') + link('wallet', 'Accounts', S.app.accounts.join(', '), 'sheet', 'accounts') + '</div>' +
     '<div class="card"><div class="row between"><div><div style="font-weight:700">Default currency</div><div class="xs muted">For new entries. Reports are always in ₹.</div></div><button class="btn sm" data-act="sheet" data-s="defcur">' + esc(s.cur) + ico('down', 16) + '</button></div></div>' +
     '<div class="col"><div class="lbl">Appearance</div>' + segH([['auto', 'Auto'], ['light', 'Light'], ['dark', 'Dark']], s.theme, 'theme') + '</div>' +
     '<div class="card flush list">' + link('ul', 'Import CSV', 'Bank statements as CSV', 'go', 'import') + link('dl', 'Back up everything', S.caps.hosted ? 'Entries and settings as a file' : 'Entries, settings and bills as one file', 'backup') + '<label class="li" for="f-restore" style="cursor:pointer"><span class="tile">' + ico('ul', 20) + '</span><div class="grow"><div style="font-weight:500">Restore from backup</div><div class="xs muted">Replaces what is on this device</div></div>' + ico('fwd', 18) + '</label><input id="f-restore" class="sr" type="file" accept=".json,application/json" tabindex="-1">' + link('dl', 'Export entries as CSV', 'For spreadsheets', 'export') + link('trash', 'Trash', trashed().length + ' items, removed after 30 days', 'go', 'trash') + '</div><div class="card"><div class="small"><b>Storage:</b> <span id="syncstate">' + syncText() + '</span></div><div class="xs muted">' + (S.mode === 'db' ? 'Bills are stored with this page. Back up now and then.' : 'Everything is stored on this phone only. Back up now and then, and before clearing app data or changing phones.') + '</div>' + (S.mode === 'idb' ? '<div class="xs muted">Storage protection: ' + (S.persisted ? 'on' : 'not guaranteed. Android may clear it if the phone runs very low on space.') + '</div>' : '') + '</div>';
@@ -1417,7 +1461,7 @@ function petOverlay() {
   return '<div class="petov" role="dialog" aria-modal="true" aria-label="Entry saved"><div class="petin"><div class="row a-pop" style="background:var(--card);border-radius:999px;padding:6px 16px 6px 8px;min-height:40px;max-width:100%"><span style="width:26px;height:26px;border-radius:50%;background:var(--good);color:#fff;display:flex;align-items:center;justify-content:center;flex:none">' + ico('check', 16, ' style="stroke-width:3"') + '</span><b class="small ell">Saved · ' + esc(e.t === 'x' ? 'Transfer' : m.name) + ' · ' + fmt(e.amt, { round: true }) + '</b></div><div style="margin-top:4px">' + pmCat(p.mood, 190, 'sav:' + p.id + ':' + p.mood + ':' + (p.line || ''), true) + '</div>' + (p.line ? '<div class="bubble"><div class="fd" style="font-size:21px;line-height:1.25">' + esc(p.line) + '</div></div>' : '') + ctx + worth + '<div class="row" style="width:100%;gap:10px;margin-top:6px"><button class="btn" style="width:96px;border-color:var(--line2)" data-act="pundo">Undo</button><button class="btn primary grow" data-act="pdone">Done</button></div><button class="link" data-act="pdone" data-then="pet">Pet reactions: change in settings</button></div></div>';
 }
 function overlays() {
-  let h = ''; if (S.sheet && SHEETS[S.sheet.type]) h += SHEETS[S.sheet.type](S.sheet); if (S.petov) h += petOverlay(); if (S.story) h += storyOverlay();
+  let h = ''; if (S.sheet && SHEETS[S.sheet.type]) h += SHEETS[S.sheet.type](S.sheet); if (S.petov) h += petOverlay(); if (S.story) h += storyOverlay(); if (S.tour) h += tourOverlay();
   if (S.viewer) h += '<div class="scrim" style="z-index:90;display:flex;align-items:center;justify-content:center;padding:16px" data-act="closeviewer"><img ' + billSrcAttr(S.viewer, 'src') + ' alt="Bill" style="max-width:100%;max-height:100%;border-radius:12px;background:#fff"><button class="ibtn" style="position:fixed;top:calc(12px + env(safe-area-inset-top,0px));right:12px" data-act="closeviewer" aria-label="Close">' + ico('x', 18) + '</button></div>';
   if (S.sel && curView() === 'entries') h += selBar();
   if (S.toast) h += '<div class="toast" role="status"><span class="grow">' + esc(S.toast.msg) + '</span>' + (S.toast.undo ? '<button data-act="' + S.toast.undo + '" data-id="' + esc(S.toast.id || '') + '">Undo</button>' : '') + '</div>';
@@ -1480,7 +1524,7 @@ function vHome() {
     chip = '<div class="col" style="gap:6px;align-items:flex-start"><div class="chipamber ' + cls + '">' + ico(!big ? 'check' : d > 0 ? 'up' : 'dn', 14, ' style="stroke-width:2.4"') + '<span>' + (!big ? 'About the same as by ' + cmp.prevLabel : fmt(Math.abs(d), { round: true }) + (d > 0 ? ' more' : ' less') + ' than by ' + cmp.prevLabel) + '</span></div><div class="small hm">' + MONTHS[Number(cmp.prev.slice(5)) - 1] + ' in full: ' + fmt(cmp.prevFull, { round: true }) + '</div></div>';
   } else chip = '<div class="small hm">No earlier month to compare with yet.</div>';
   const bud = budget > 0 ? '<div class="bar big"><i style="width:' + Math.min(usedPct, 100) + '%"></i><b style="left:' + pace + '%"></b></div><div class="row between small hm" style="gap:8px"><span>' + usedPct + '% of ' + fmt(budget, { round: true }) + ' budget</span><span>' + (spent > budget ? fmt(spent - budget, { round: true }) + ' over' : fmt(budget - spent, { round: true }) + ' left') + '</span></div>' : '<button class="btn sm" style="align-self:flex-start" data-act="bedit" data-id="overall">Set a monthly budget</button>';
-  const hero = '<div class="hero" style="padding:18px"><div class="row between" style="align-items:center;gap:8px"><div class="grow" style="min-width:0"><div class="small hm">Spent in ' + MONTHS[Number(key.slice(5)) - 1] + '</div><div class="amtbig">' + fmt(spent, { round: true }) + '</div></div><div style="flex:none">' + pmCat(heroMood(spent, budget, cmp, dom, dim), 72, 'hero:' + heroMood(spent, budget, cmp, dom, dim) + ':' + key, true) + '</div></div>' + chip + bud + '<div class="small hm" style="border-top:1px solid var(--hero-soft);padding-top:8px">Income ' + fmt(income, { round: true }) + ' · Net ' + fmt(income - spent, { round: true }) + '</div></div>';
+  const hero = heroHtml(spent, income, budget, cmp, dom, dim, key, chip, bud);
   const ins = homeInsights(); const ii = Math.min(S.insIdx || 0, ins.length - 1); const cur = ins[ii];
   const bubble = '<div class="card" data-swipe2="1" style="gap:6px;padding:12px 14px"><div class="row" style="gap:10px"><span style="flex:none">' + pmCat(cur.mood, 56, cur.kind === 'greet' ? 'greet:' + S.greet.seq : 'ins:' + ii + ':' + cur.text, true) + '</span><button type="button" class="grow" data-act="insnext" style="background:var(--peach);border:0;border-radius:18px;padding:10px 14px;text-align:left;color:var(--ink);min-width:0;font:600 17px/1.25 Fredoka,sans-serif" aria-label="Next insight">' + esc(cur.text) + '</button>' + (cur.kind === 'greet' ? '<button class="ibtn soft" style="width:40px;height:40px" data-act="gdismiss" aria-label="Dismiss">' + ico('x', 16) + '</button>' : '') + '</div><div class="row" style="justify-content:center;gap:6px;min-height:24px" role="img" aria-label="Insight ' + (ii + 1) + ' of ' + ins.length + '">' + ins.map((_, k) => '<span style="height:6px;border-radius:999px;width:' + (k === ii ? 18 : 6) + 'px;background:' + (k === ii ? 'var(--primary)' : 'var(--line2)') + '"></span>').join('') + (ins.length > 1 ? '<span class="xs muted" style="margin-left:8px">Tap or swipe for more</span>' : '') + '</div></div>';
   const R = ringSlots(); const g = ringGeom(); const sel = S.ringSel >= 0 ? R.slots[S.ringSel] : null;
@@ -1489,7 +1533,7 @@ function vHome() {
   const note = R.total === 0 ? 'Nothing spent yet this month. Add your first entry.' : sel && sel.group ? 'Includes ' + sel.group.map((o) => o.name + ' ' + fmt(o.amt, { round: true })).join(', ') : 'Tap an icon to see its amount.';
   const ring = '<div class="card"><div class="row between"><h2 class="h3">Where it went</h2><span class="small muted">' + esc(rangeShort(key + '-01', t)) + '</span></div><div style="position:relative;height:' + g.h + 'px"><div style="position:absolute;left:50%;top:50%;margin:-' + g.donut / 2 + 'px 0 0 -' + g.donut / 2 + 'px;width:' + g.donut + 'px;height:' + g.donut + 'px;border-radius:50%;background:' + ringGradient(R.slots, R.total) + '" role="img" aria-label="Spending by category"><div style="position:absolute;inset:' + Math.round(g.donut * 0.22) + 'px;border-radius:50%;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">' + center + '</div></div>' + items + '</div><div class="xs muted" style="text-align:center">' + esc(note) + '</div><button class="link" style="align-self:center;min-height:40px" data-act="go" data-v="breakdown">See every category</button></div>';
   const none = live().length === 0 ? empty('Welcome. Start with one entry.', 'Add what you just spent, or import a bank CSV to fill the last few months in one go.', '<div class="row wrap"><button class="btn primary" style="min-height:48px;font-size:16px" data-act="add">Add an entry</button><button class="btn" data-act="go" data-v="import">Import CSV</button></div>') : '';
-  return '<div class="row between" style="gap:12px">' + scopeSeg() + '<button class="ibtn" style="background:var(--primary);color:var(--on-primary);border:0;width:48px;height:48px;font-family:Fredoka,sans-serif;font-weight:600;font-size:18px" data-act="go" data-v="settings" aria-label="Profile and settings">M</button></div>' + banners() + none + hero + bubble + ring;
+  return '<div class="row between" style="gap:12px">' + scopeSeg() + '<button class="ibtn" style="background:var(--primary);color:var(--on-primary);border:0;width:48px;height:48px;font-family:Fredoka,sans-serif;font-weight:600;font-size:18px" data-act="go" data-v="settings" aria-label="Profile and settings">M</button></div>' + banners() + none + gbStrip() + hero + bubble + ring;
 }
 
 /* ---------- entries: select mode ---------- */
@@ -1588,10 +1632,10 @@ function pushHist() { try { history.pushState({ n: S.ui.stack.length }, ''); his
 function go(v, params) {
   pmReset();
   if (TABS.indexOf(v) >= 0) { tab(v); return; }
-  S.greet = null;
+  S.greet = null; gbLeave();
   S.ui.stack.push(v); S.ui.params = params || {}; pushHist(); render(true);
 }
-function tab(t) { pmReset(); S.sel = null; if (t !== 'home') S.greet = null; S.ui.tab = t; S.ui.stack = [t]; S.ui.params = {}; S.sheet = null; S.story = null; if (t === 'insights') recapAuto(); render(true); }
+function tab(t) { pmReset(); S.sel = null; if (t !== 'home') { S.greet = null; gbLeave(); } S.ui.tab = t; S.ui.stack = [t]; S.ui.params = {}; S.sheet = null; S.story = null; if (t === 'insights') recapAuto(); render(true); }
 function cleanupView(v) {
   if (v === 'add' && S.draft) { (S.draft.newAids || []).forEach((a) => { try { if (S.caps.assets) S.caps.assets.delete(a); } catch (e) { /* ignore */ } }); S.draft = null; }
   if (v === 'rule') S.rdraft = null;
@@ -1602,7 +1646,7 @@ function back() { popView(); if (histPushed > 0) { skipPop++; histPushed--; try 
 window.addEventListener('popstate', () => {
   if (skipPop > 0) { skipPop--; return; }
   if (histPushed > 0) histPushed--;
-  if (S.sheet || S.petov || S.viewer || S.story) { S.sheet = null; S.petov = null; S.viewer = null; S.story = null; pushHist(); render(); return; }
+  if (S.sheet || S.petov || S.viewer || S.story || S.tour) { S.sheet = null; S.petov = null; S.viewer = null; S.story = null; if (S.tour) { tourClose(); return; } pushHist(); render(); return; }
   if (S.ui.stack.length > 1) popView();
 });
 const closeSheet = () => { S.sheet = null; render(); };
@@ -1878,7 +1922,7 @@ async function boot() {
   S.months = {}; Object.keys(docs).forEach((k) => { if (/^m_\d{4}-\d{2}$/.test(k) && docs[k] && Array.isArray(docs[k].entries)) S.months[k.slice(2)] = docs[k]; });
   rebuildIndex();
   const cutoff = Date.now() - 30 * 86400000; Object.values(S.idx).forEach((e) => { if (e.del && e.del < cutoff) purgeEntry(e.id); });
-  S.loading = false; if (!S.ui.range) S.ui.range = presetRange('month'); try { S.greet = makeGreeting(); } catch (e) { try { S.greet = greetFallback(); } catch (e2) { S.greet = null; } } render(true);
+  S.loading = false; if (!S.ui.range) S.ui.range = presetRange('month'); try { S.greet = makeGreeting(); } catch (e) { try { S.greet = greetFallback(); } catch (e2) { S.greet = null; } } tourBoot(); gbBoot(); render(true);
 }
 if (S.noSave === undefined) S.noSave = false;
 try { history.replaceState({ root: 1 }, ''); } catch (e) { /* ignore */ }
@@ -1886,7 +1930,7 @@ try { history.replaceState({ root: 1 }, ''); } catch (e) { /* ignore */ }
 let hiddenAt = 0;
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) { hiddenAt = Date.now(); return; }
-  if (!S.loading && hiddenAt && Date.now() - hiddenAt > 5 * 60000) { hiddenAt = 0; try { pickSessionPet(); S.greet = makeGreeting(); } catch (e) { try { S.greet = greetFallback(); } catch (e2) { S.greet = null; } } if (curView() === 'home' && S.ui.stack.length === 1) render(); }
+  if (!S.loading && hiddenAt && Date.now() - hiddenAt > 5 * 60000) { hiddenAt = 0; try { pickSessionPet(); S.greet = makeGreeting(); } catch (e) { try { S.greet = greetFallback(); } catch (e2) { S.greet = null; } } if (!S.tour) gbBoot(); if (curView() === 'home' && S.ui.stack.length === 1) render(); }
 });
 
 /* ===== v2 actions, listeners ===== */
@@ -2235,7 +2279,7 @@ function pmCat(mood, px, key, idle) { return '<span class="pm m-' + mood + (idle
 function pmAfterRender() {
   try {
     document.documentElement.setAttribute('data-pm', S.app && S.app.settings && S.app.settings.petAnim === false ? 'off' : 'on');
-    const fresh = []; document.querySelectorAll('.pm[data-mk]').forEach((el) => { const k = el.getAttribute('data-mk'); if (!PM_SEEN[k]) { el.classList.add('go'); fresh.push(k); } });
+    const fresh = []; document.querySelectorAll('.pm[data-mk],[data-gbk]').forEach((el) => { const k = el.getAttribute('data-mk') || el.getAttribute('data-gbk'); if (!PM_SEEN[k]) { el.classList.add('go'); fresh.push(k); } });
     fresh.forEach((k) => { PM_SEEN[k] = 1; }); const ks = Object.keys(PM_SEEN); if (ks.length > 300) ks.slice(0, 150).forEach((k) => { delete PM_SEEN[k]; });
   } catch (e) { /* ignore */ }
 }
@@ -2330,6 +2374,7 @@ const SC_METRICS = [
   ['saved', 'Saved or invested', 'piggy-bank', 3], ['fixed', 'Fixed costs', 'lock', 5], ['regret', 'Regret taps', 'rotate-ccw', 6], ['avgday', 'Average per day', 'calendar-days', 5], ['largest', 'Largest entry', 'receipt', 1]
 ];
 const SC_DEFAULT = ['spent', 'income', 'kept', 'invested'];
+const SC_PET = { spent: ['munch', 'indian-rupee'], income: ['happy', 'arrow-down-to-line'], kept: ['smug', 'piggy-bank'], invested: ['happy', 'trending-up'], saved: ['happy', 'hand-coins'], fixed: ['sleepy', 'lock'], regret: ['crying', 'rotate-ccw'], avgday: ['smug', 'calendar-days'], largest: ['shocked', 'receipt'] };
 function scSel() {
   const a = S.app.settings.scard; const ok = Array.isArray(a) ? a.filter((id, i) => SC_METRICS.some((m) => m[0] === id) && a.indexOf(id) === i).slice(0, 4) : []; return ok.length ? ok : SC_DEFAULT.slice();
 }
@@ -2356,7 +2401,7 @@ function ivMetrics(D) {
 function ivScorecard(D) {
   const M = ivMetrics(D);
   return '<section aria-label="Scorecard"><div class="row between" style="margin-bottom:6px"><h2 class="h3">Scorecard</h2><button type="button" class="link" data-act="scedit" style="gap:6px">' + ico('pencil', 16) + 'Edit</button></div><div class="iv-sc">' +
-    scSel().map((id) => { const m = SC_METRICS.find((x) => x[0] === id); return '<div class="iv-tile tb' + m[3] + '"><div class="iv-l">' + ico(m[2], 16) + '<span class="ell">' + esc(m[1]) + '</span></div><div class="iv-b">' + esc(M[id].big) + '</div><div class="iv-c">' + M[id].cap + '</div></div>'; }).join('') + '</div></section>';
+    scSel().map((id) => { const m = SC_METRICS.find((x) => x[0] === id); return '<div class="iv-tile tb' + m[3] + '"><span class="iv-pet">' + cat(SC_PET[id][0], 48, '') + '<span class="pb">' + ico(SC_PET[id][1], 14, ' style="stroke-width:2.2"') + '</span></span><div class="iv-l">' + ico(m[2], 16) + '<span class="ell">' + esc(m[1]) + '</span></div><div class="iv-b">' + esc(M[id].big) + '</div><div class="iv-c">' + M[id].cap + '</div></div>'; }).join('') + '</div></section>';
 }
 SHEETS.scard = function () {
   const D = insightData(); const M = ivMetrics(D); const sel = scSel(); const rest = SC_METRICS.filter((m) => sel.indexOf(m[0]) < 0); const full = sel.length >= 4;
@@ -2510,6 +2555,100 @@ Object.assign(ACT, {
   ivcatall: () => { S.ui.catAll = !S.ui.catAll; render(); }
 });
 document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape' && S.story) { S.story = null; render(true); } });
+
+/* ===== v10: greeting note beside the hero pet, app tour, pets on bars, Entries and scorecards ===== */
+
+/* ---------- greeting note (the pet peeks over the card and talks) ---------- */
+let gbTimer = 0;
+function gbClear() { clearTimeout(gbTimer); gbTimer = 0; }
+function gbBoot() {
+  gbClear(); if (S.tour || !S.greet || !S.greet.text) { S.gb = null; return; }
+  S.gbSeq = (S.gbSeq || 0) + 1; S.gb = { text: S.greet.text, mood: S.greet.mood, seq: S.gbSeq, state: 'in' }; gbTimer = setTimeout(gbClose, 15000);
+}
+function gbClose() {
+  gbClear(); const g = S.gb; if (!g || g.state === 'out') return; g.state = 'out'; render();
+  gbTimer = setTimeout(() => { gbTimer = 0; if (S.gb === g) { S.gb = null; S.greet = null; render(); } }, 1100);
+}
+function gbLeave() { gbClear(); S.gb = null; S.greet = null; }
+function gbFresh() { for (let i = 0; i < 4; i++) { const g = makeGreeting(new Date()); if (!g) return null; if (!S.gb || g.text !== S.gb.text) return g; } return makeGreeting(new Date()); }
+function gbStrip() {
+  const g = S.gb; if (!g || !g.text) return ''; const out = g.state === 'out'; const lines = Math.min(3, Math.ceil(g.text.length / 27)); const gh = 24 + 20 * lines;
+  return '<div class="gstrip ' + (out ? 'gout' : 'gin') + '" data-gbk="gb:' + g.seq + ':' + (out ? 'out' : 'in') + '" style="--gh:' + gh + 'px"><div class="gnote" role="status">' + esc(g.text) + '<button type="button" class="gx" data-act="gbclose" aria-label="Dismiss note"><span>' + ico('x', 13) + '</span></button><span class="gtail"></span></div></div>';
+}
+function heroHtml(spent, income, budget, cmp, dom, dim, key, chip, bud) {
+  const g = S.gb; const peek = !!g && g.state !== 'out'; const out = !!g && g.state === 'out'; const mood = g ? g.mood : heroMood(spent, budget, cmp, dom, dim);
+  const gk = g ? ' data-gbk="gb:' + g.seq + ':' + (out ? 'out' : 'in') + '"' : '';
+  return '<div class="hero' + (peek ? ' peek' : out ? ' unpeek' : '') + '"' + gk + ' style="padding:18px"><div class="row between" style="align-items:center;gap:8px"><div class="grow" style="min-width:0"><div class="small hm">Spent in ' + MONTHS[Number(key.slice(5)) - 1] + '</div><div class="amtbig">' + fmt(spent, { round: true }) + '</div></div><button type="button" class="petbtn" data-act="gbtap" aria-label="Your pet. Tap for a note">' + pmCat(mood, 72, 'hero:' + mood + ':' + (g ? g.seq : key), true) + '</button></div>' + chip + bud + '<div class="small hm" style="border-top:1px solid var(--hero-soft);padding-top:8px">Income ' + fmt(income, { round: true }) + ' · Net ' + fmt(income - spent, { round: true }) + '</div></div>';
+}
+document.addEventListener('pointerdown', (e) => { if (S.gb && e.target && e.target.closest && e.target.closest('.gnote')) gbClear(); });
+document.addEventListener('pointerup', () => { if (S.gb && S.gb.state !== 'out' && !gbTimer) gbTimer = setTimeout(gbClose, 8000); });
+
+/* ---------- app tour ---------- */
+const TOUR_PERS = [['sassy', 'Sassy'], ['sweet', 'Sweet'], ['funny', 'Funny'], ['bossy', 'Bossy'], ['mixed', 'Mixed']];
+function tourStart(replay) { S.tourSeq = (S.tourSeq || 0) + 1; S.tour = { i: 0, id: S.tourSeq, replay: !!replay }; gbClear(); S.gb = null; }
+function tourClose() {
+  const replay = S.tour && S.tour.replay; S.tour = null; S.app.tourSeen = true; saveApp();
+  if (!replay) { try { S.greet = makeGreeting(); } catch (e) { S.greet = greetFallback(); } gbBoot(); }
+  render(true);
+}
+function tourBoot() {
+  try { if (S.app.tourSeen === undefined) { if (live().length > 0) { S.app.tourSeen = true; saveApp(); } else tourStart(false); } } catch (e) { /* ignore */ }
+}
+function tourOverlay() {
+  const t = S.tour; const i = t.i; const last = i === 4; const P = S.app.settings.pet; const pet = (mood, px) => pmCat(mood, px, 'tour:' + t.id + ':' + i, last); let body = '';
+  if (i === 0) {
+    const ks = petKinds();
+    body = '<p class="fd" style="margin:0;font-size:26px;line-height:1.2">Meet your money buddy</p><div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;width:100%">' +
+      PET_KINDS.map((x) => { const on = ks.indexOf(x[0]) >= 0; return '<button type="button" class="tpk' + (on ? ' on' : '') + '" data-act="ppet" data-k="' + x[0] + '" aria-pressed="' + on + '" aria-label="' + x[1] + (on ? ', selected' : '') + '">' + petImg(x[0], 'happy', 44, '') + '<span>' + x[1] + '</span>' + (on ? '<i class="tk">' + ico('check', 12, ' style="stroke-width:3.2"') + '</i>' : '') + '</button>'; }).join('') +
+      '</div><div style="font-size:14px">Pick one or more. With 2 or more, a different one greets you each time you open the app.</div><div style="font-size:14px;font-weight:700">Pick a personality</div><div class="tpers">' +
+      TOUR_PERS.map((p) => '<button type="button" class="tper' + (P.personality === p[0] ? ' on' : '') + '" data-act="tourper" data-p="' + p[0] + '" aria-pressed="' + (P.personality === p[0]) + '">' + p[1] + '</button>').join('') + '</div>';
+  } else if (i === 1) body = pet('munch', 150) + '<p class="st-bub">Tap the + button and add what you spent. Five seconds, tops.</p><div class="tfab"><span>' + ico('plus', 34, ' style="stroke-width:2.6"') + '</span><div><b class="fd" style="font-size:20px">₹450</b><br>Dining · UPI · Today</div></div>';
+  else if (i === 2) body = pet('smug', 150) + '<p class="st-bub">This ring shows where your money went. Tap an icon to peek.</p><div class="tring" role="img" aria-label="Spending ring"><div><b class="fd" style="font-size:20px">₹44,420</b><span style="font-size:12px">spent</span></div></div>';
+  else if (i === 3) body = pet('shocked', 150) + '<p class="st-bub">Set a budget and I’ll warn you before you overspend.</p><div class="tbar"><div class="trk"><i></i><b></b><span>' + cat('shocked', 52) + '</span></div><div class="row between"><span>78% of ₹90,000</span><span>The line shows the pace</span></div></div>';
+  else body = pet('sleepy', 150) + '<p class="st-bub">Everything stays on this phone. Back it up now and then.</p><div style="font-size:14px">You can watch this tour again any time in Settings.</div>';
+  const btn = last ? '<div class="tbtns"><button type="button" class="st-btn p" data-act="backup">Back up now</button><button type="button" class="st-btn" data-act="tourdone">Start using Meowney</button></div>' : '<button type="button" class="st-btn tnext" data-act="tournext">Next ' + ico('chevron-right', 20) + '</button>';
+  return '<div class="story s' + i + '" role="dialog" aria-modal="true" aria-label="App tour"><div class="st-in"><div class="st-prog" aria-hidden="true">' + [0, 1, 2, 3, 4].map((k) => '<i' + (k <= i ? ' class="on"' : '') + '></i>').join('') + '</div><div class="row between" style="width:100%;min-height:44px"><span class="small" style="font-weight:600">App tour · ' + (i + 1) + ' of 5</span>' + (last ? '<span></span>' : '<button type="button" class="link" data-act="tourskip" style="color:inherit;text-decoration:underline">Skip tour</button>') + '</div><div class="st-body live">' + body + '</div>' + btn + '</div></div>';
+}
+
+/* ---------- pets on the budget bars ---------- */
+function petBar(fill, used, pace, big, color) {
+  const px = big ? 52 : 38;
+  const mood = used >= 100 ? 'crying' : pace != null ? (used > pace + 15 ? 'shocked' : used > pace ? 'munch' : used === 0 ? 'sleepy' : 'happy') : (used >= 85 ? 'shocked' : used === 0 ? 'sleepy' : 'happy');
+  return '<div class="bar' + (big ? ' big' : '') + ' pbar" style="' + (color ? '--c:' + color + ';' : '') + 'position:relative;overflow:visible;margin-top:' + (px - 8) + 'px"><i style="width:' + fill + '%"></i>' + (pace != null ? '<b style="left:' + pace + '%"></b>' : '') + '<span class="bpet" style="left:clamp(' + px / 2 + 'px,' + fill + '%,calc(100% - ' + px / 2 + 'px));top:-' + (px - 6) + 'px">' + cat(mood, px) + '</span></div>';
+}
+
+/* ---------- Entries: pet in the month card and a one-line note ---------- */
+const ENT3 = {
+  sassy: { today: ['Today: {n} entries, {amt}. {cat} leads.', '{n} entries so far today, {amt}. {cat} is winning.', '{amt} today across {n} entries. {cat} again?'], none: ['Nothing logged today. I’m watching.', 'No entries today. Suspiciously quiet.'], past: ['{month}: {n} expenses, {amt}. History is judging.', '{n} expenses in {month}. Total: {amt}. No comment.'] },
+  sweet: { today: ['Today: {n} entries, {amt}. {cat} is the biggest.', '{n} entries so far, {amt} in total. Nicely tracked.', '{amt} today. {cat} leads. You’re doing well.'], none: ['Nothing logged today yet. No rush.', 'A quiet day so far. Add anything whenever you like.'], past: ['{month}: {n} expenses, {amt} in total.', 'Looking back at {month}: {amt} across {n} expenses.'] },
+  funny: { today: ['Today: {n} entries, {amt}. {cat} is the MVP.', '{n} entries today. {amt} gone. {cat} says thanks.', '{amt} today. {cat} had a big day.'], none: ['No entries today. The wallet is on a spa day.', 'Zero entries today. Did money take a holiday?'], past: ['{month}: {n} expenses, {amt}. The plot thickens.', '{n} expenses in {month}, {amt} in total. A classic.'] },
+  bossy: { today: ['Today: {n} entries, {amt}. {cat} is the biggest. Watch it.', '{n} entries today, {amt}. Keep it under control.', '{amt} so far today. {cat} leads. Review it.'], none: ['Nothing logged today. Log it now.', 'No entries today. Don’t forget any.'], past: ['{month}: {n} expenses, {amt}. Study it.', '{amt} across {n} expenses in {month}. Learn from it.'] }
+};
+function entMood(spent, key) {
+  if (spent === 0) return 'sleepy'; const b = S.app.settings.budget; if (b > 0 && key === mk(todayStr()) && spent > b) return 'crying';
+  try { if (key === mk(todayStr())) { const c = sameDateCompare(); if (c.prevSame > 0 && spent < c.prevSame * 0.9) return 'happy'; } } catch (e) { /* ignore */ } return 'smug';
+}
+function entNote(key, list) {
+  const p0 = S.app.settings.pet.personality; if (p0 === 'silent') return ''; const t = todayStr(); const dom = Number(t.slice(8, 10));
+  const per = p0 === 'mixed' ? ['sassy', 'sweet', 'funny', 'bossy'][(dom + key.length) % 4] : p0; let pool, vars;
+  if (key === mk(t)) {
+    const td = list.filter((e) => e.date === t && e.t === 'e');
+    if (td.length) { const by = byCat(td); const top = Object.keys(by).sort((a, b) => by[b] - by[a])[0]; vars = { n: td.length, amt: fmt(sum(td, (e) => e.amt), { round: true }), cat: String(catById(top).name).split('/')[0] }; pool = ENT3[per].today; } else { vars = { n: 0 }; pool = ENT3[per].none; }
+  } else { const ml = list.filter((e) => mk(e.date) === key && e.t === 'e'); if (!ml.length) return ''; vars = { month: monthLabel(key), n: ml.length, amt: fmt(sum(ml, (e) => e.amt), { round: true }) }; pool = ENT3[per].past; }
+  return '<div class="entnote" role="status">' + esc(fillT(pool[(dom + vars.n) % pool.length], vars)) + '</div>';
+}
+
+/* ---------- actions ---------- */
+Object.assign(ACT, {
+  gbtap: () => { const g = gbFresh(); if (!g) return; gbClear(); S.greet = g; S.gbSeq = (S.gbSeq || 0) + 1; S.gb = { text: g.text, mood: g.mood, seq: S.gbSeq, state: 'in' }; gbTimer = setTimeout(gbClose, 15000); render(); },
+  gbclose: () => gbClose(),
+  tourstart: () => { tourStart(true); render(true); },
+  tournext: () => { if (S.tour && S.tour.i < 4) S.tour.i++; render(); },
+  tourskip: () => tourClose(),
+  tourdone: () => tourClose(),
+  tourper: (d) => { S.app.settings.pet.personality = d.p; saveApp(); render(); }
+});
+document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape' && S.tour) tourClose(); });
 
 boot();
 
