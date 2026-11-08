@@ -1165,7 +1165,7 @@ function banners() {
   if (S.mode === 'mem') h += '<div class="banner warn"><div class="grow small">Storage isn’t available here, so nothing you enter will be kept after you close this page.</div></div>';
   else if (S.mode === 'local') h += '<div class="banner info"><div class="grow small">Saved on this device only, because account storage isn’t available in this view.</div></div>';
   const rv = needsReview().length; if (rv) h += '<div class="banner warn"><span class="dot"></span><div class="grow small"><b>' + rv + (rv === 1 ? ' entry needs' : ' entries need') + ' a category.</b></div><button class="btn sm" data-act="review">Sort</button></div>';
-  if (S.mode !== 'db' && live().length >= 15 && Date.now() - (S.app.lastBackup || 0) > 30 * 86400000) h += '<div class="banner info"><div class="grow small"><b>Back up your data.</b> It lives only on this phone.</div><button class="btn sm" data-act="backup">Back up</button></div>';
+  h += backupBanners();
   const due = dueRecurring().length; if (due) h += '<div class="banner info"><div class="grow small"><b>' + due + ' repeating ' + (due === 1 ? 'entry is' : 'entries are') + ' due.</b></div><button class="btn sm" data-act="recdue">Review</button></div>';
   return h;
 }
@@ -1378,7 +1378,7 @@ function vSettings() {
   return backH('Settings') + '<div class="card flush list">' + link('user', 'Profiles and sharing', S.app.profiles.length + (S.app.profiles.length === 1 ? ' profile' : ' profiles'), 'go', 'profiles') + link('pie', 'Categories', S.app.cats.filter((c) => !c.archived).length + ' categories', 'go', 'cats') + link('paw', 'Pet reactions', modeName2(), 'go', 'pet') + link('sparkles', 'App tour', 'Watch the 5-card tour again', 'tourstart', '') + link('wallet', 'Accounts', S.app.accounts.join(', '), 'sheet', 'accounts') + '</div>' +
     '<div class="card"><div class="row between"><div><div style="font-weight:700">Default currency</div><div class="xs muted">For new entries. Reports are always in ₹.</div></div><button class="btn sm" data-act="sheet" data-s="defcur">' + esc(s.cur) + ico('down', 16) + '</button></div></div>' +
     '<div class="col"><div class="lbl">Appearance</div>' + segH([['auto', 'Auto'], ['light', 'Light'], ['dark', 'Dark']], s.theme, 'theme') + '</div>' +
-    '<div class="card flush list">' + link('ul', 'Import CSV', 'Bank statements as CSV', 'go', 'import') + link('dl', 'Back up everything', S.caps.hosted ? 'Entries and settings as a file' : 'Entries, settings and bills as one file', 'backup') + '<label class="li" for="f-restore" style="cursor:pointer"><span class="tile">' + ico('ul', 20) + '</span><div class="grow"><div style="font-weight:500">Restore from backup</div><div class="xs muted">Replaces what is on this device</div></div>' + ico('fwd', 18) + '</label><input id="f-restore" class="sr" type="file" accept=".json,application/json" tabindex="-1">' + link('dl', 'Export entries as CSV', 'For spreadsheets', 'export') + link('trash', 'Trash', trashed().length + ' items, removed after 30 days', 'go', 'trash') + '</div><div class="card"><div class="small"><b>Storage:</b> <span id="syncstate">' + syncText() + '</span></div><div class="xs muted">' + (S.mode === 'db' ? 'Bills are stored with this page. Back up now and then.' : 'Everything is stored on this phone only. Back up now and then, and before clearing app data or changing phones.') + '</div>' + (S.mode === 'idb' ? '<div class="xs muted">Storage protection: ' + (S.persisted ? 'on' : 'not guaranteed. Android may clear it if the phone runs very low on space.') + '</div>' : '') + '</div>';
+    '<div class="card flush list">' + link('ul', 'Import CSV', 'Bank statements as CSV', 'go', 'import') + (hosted() ? '' : link('cloud', 'Google Drive backup', driveSub(), 'go', 'drive')) + link('dl', 'Back up everything', S.caps.hosted ? 'Entries and settings as a file' : 'Entries, settings and bills as one file', 'backup') + '<label class="li" for="f-restore" style="cursor:pointer"><span class="tile">' + ico('ul', 20) + '</span><div class="grow"><div style="font-weight:500">Restore from backup</div><div class="xs muted">Replaces what is on this device</div></div>' + ico('fwd', 18) + '</label><input id="f-restore" class="sr" type="file" accept=".json,application/json" tabindex="-1">' + link('dl', 'Export entries as CSV', 'For spreadsheets', 'export') + link('trash', 'Trash', trashed().length + ' items, removed after 30 days', 'go', 'trash') + '</div><div class="card"><div class="small"><b>Storage:</b> <span id="syncstate">' + syncText() + '</span></div><div class="xs muted">' + (S.mode === 'db' ? 'Bills are stored with this page. Back up now and then.' : (S.app.settings.drive && S.app.settings.drive.on ? 'Stored on this phone, with a backup copy in your own Google Drive. Back up before clearing app data or changing phones.' : 'Everything is stored on this phone only. Back up now and then, and before clearing app data or changing phones.')) + '</div>' + (S.mode === 'idb' ? '<div class="xs muted">Storage protection: ' + (S.persisted ? 'on' : 'not guaranteed. Android may clear it if the phone runs very low on space.') + '</div>' : '') + '</div>';
 }
 const modeName2 = () => { const f = S.app.settings.pet.freq; return f === 'every' ? 'Every entry' : f === 'rule' ? 'When a rule matches' : f === 'daily' ? 'Once a day' : 'Off'; };
 function vTrash() {
@@ -1557,7 +1557,7 @@ function vHome() {
   const items = R.slots.map((s, i) => { const a = ((22.5 + i * 45) * Math.PI) / 180; const dx = g.R * Math.sin(a), dy = -g.R * Math.cos(a); const on = i === S.ringSel; return '<button type="button" data-act="ringsel" data-i="' + i + '" aria-pressed="' + on + '" aria-label="' + esc(s.name) + ', ' + fmt(s.amt, { round: true }) + ', ' + s.pct + '%" style="position:absolute;left:calc(50% + ' + dx.toFixed(1) + 'px);top:calc(50% + ' + dy.toFixed(1) + 'px);margin:-31px 0 0 -28px;width:56px;border:0;background:transparent;padding:0;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--ink);opacity:' + (s.dim ? 0.5 : 1) + '"><span class="tile" style="--c:' + s.color + ';' + (on ? 'outline:2.5px solid var(--primary);outline-offset:1px' : '') + '">' + ico(s.icon, 22) + '</span><span class="row fd" style="gap:4px;font-size:13px"><span style="width:8px;height:8px;border-radius:50%;background:' + s.color + '"></span>' + s.pct + '%</span></button>'; }).join('');
   const note = R.total === 0 ? 'Nothing spent yet this month. Add your first entry.' : sel && sel.group ? 'Includes ' + sel.group.map((o) => o.name + ' ' + fmt(o.amt, { round: true })).join(', ') : 'Tap an icon to see its amount.';
   const ring = '<div class="card"><div class="row between"><h2 class="h3">Where it went</h2><span class="small muted">' + esc(rangeShort(key + '-01', t)) + '</span></div><div style="position:relative;height:' + g.h + 'px"><div style="position:absolute;left:50%;top:50%;margin:-' + g.donut / 2 + 'px 0 0 -' + g.donut / 2 + 'px;width:' + g.donut + 'px;height:' + g.donut + 'px;border-radius:50%;background:' + ringGradient(R.slots, R.total) + '" role="img" aria-label="Spending by category"><div style="position:absolute;inset:' + Math.round(g.donut * 0.22) + 'px;border-radius:50%;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">' + center + '</div></div>' + items + '</div><div class="xs muted" style="text-align:center">' + esc(note) + '</div><button class="link" style="align-self:center;min-height:40px" data-act="go" data-v="breakdown">See every category</button></div>';
-  const none = live().length === 0 ? empty('Welcome. Start with one entry.', 'Add what you just spent, or import a bank CSV to fill the last few months in one go.', '<div class="row wrap"><button class="btn primary" style="min-height:48px;font-size:16px" data-act="add">Add an entry</button><button class="btn" data-act="go" data-v="import">Import CSV</button></div>') : '';
+  const none = live().length === 0 ? empty('Welcome. Start with one entry.', 'Add what you just spent, or import a bank CSV to fill the last few months in one go.', '<div class="row wrap"><button class="btn primary" style="min-height:48px;font-size:16px" data-act="add">Add an entry</button><button class="btn" data-act="go" data-v="import">Import CSV</button></div>' + (hosted() ? '' : '<button class="btn block" data-act="drvrestorefirst">' + ico('cloud', 20) + 'New phone? Restore from Google Drive</button>')) : '';
   return '<div class="row between" style="gap:12px">' + scopeSeg() + '<button class="ibtn" style="background:var(--primary);color:var(--on-primary);border:0;width:48px;height:48px;font-family:Fredoka,sans-serif;font-weight:600;font-size:18px" data-act="go" data-v="settings" aria-label="Profile and settings">M</button></div>' + banners() + none + gbStrip() + hero + bubble + ring;
 }
 
@@ -1572,7 +1572,8 @@ function entryRow(e, showDate) {
 function selBar() {
   if (!S.sel) return '';
   const n = S.sel.size; const one = n === 1 ? S.idx[Array.from(S.sel)[0]] : null;
-  return '<div class="selbar" role="toolbar" aria-label="Bulk actions"><div class="row between" style="gap:8px"><b>' + n + ' selected</b><span class="row" style="gap:4px"><button class="link" data-act="selall">Select all</button>' + (one && normDesc(one.note) ? '<button class="link" data-act="selsimilar">Same description</button>' : '') + '</span></div><div class="row" style="gap:8px"><button class="btn sm grow" data-act="sheet" data-s="catpick" data-ctx="bulk"' + (n ? '' : ' disabled') + '>' + ico('grid', 16) + 'Category</button><button class="btn sm grow" data-act="sheet" data-s="tagpick" data-ctx="bulk"' + (n ? '' : ' disabled') + '>' + ico('tag', 16) + 'Tags</button><button class="btn sm danger grow" data-act="bulkdel"' + (n ? '' : ' disabled') + '>' + ico('trash', 16) + 'Delete</button></div></div>';
+  const tot = filteredEntries(S.ui.nav.entries || mk(todayStr())).out.length; const allOn = tot > 0 && n === tot;
+  return '<div class="selbar" role="toolbar" aria-label="Bulk actions"><div class="row between" style="gap:8px"><span class="row" style="gap:6px"><button class="ibtn soft" style="border:0" data-act="selmode" aria-label="Cancel selection">' + ico('x', 20) + '</button><b>' + n + ' selected</b></span><span class="row" style="gap:14px">' + (allOn ? '' : '<button class="link" data-act="selall">Select all</button>') + (n ? '<button class="link" data-act="selclear">Clear</button>' : '') + (one && normDesc(one.note) ? '<button class="link" data-act="selsimilar">Same description</button>' : '') + '</span></div><div class="row" style="gap:8px"><button class="btn sm grow" data-act="sheet" data-s="catpick" data-ctx="bulk"' + (n ? '' : ' disabled') + '>' + ico('grid', 16) + 'Category</button><button class="btn sm grow" data-act="sheet" data-s="tagpick" data-ctx="bulk"' + (n ? '' : ' disabled') + '>' + ico('tag', 16) + 'Tags</button><button class="btn sm danger grow" data-act="bulkdel"' + (n ? '' : ' disabled') + '>' + ico('trash', 16) + 'Delete</button></div></div>';
 }
 
 /* ===== v2 pickers and import review ===== */
@@ -1900,10 +1901,13 @@ function normalizeApp(a) {
   normalizeV3(app);
   return app;
 }
-async function exportBackup() {
+async function buildBackup() {
   const bills = {}; const aids = new Set(); Object.values(S.idx).forEach((e) => (e.bills || []).forEach((b) => aids.add(b.aid)));
   if (!hosted() && S.mode === 'idb') { for (const a of aids) { try { const rec = await idb.get('blobs', a); if (rec) bills[a] = { type: rec.type, b64: bufToB64(rec.buf) }; } catch (e) { /* skip missing */ } } }
-  const data = { kind: 'finance-tracker-backup', v: 1, at: Date.now(), doc: { app: S.app, months: S.months }, bills };
+  return { kind: 'finance-tracker-backup', v: 1, at: Date.now(), doc: { app: S.app, months: S.months }, bills };
+}
+async function exportBackup() {
+  const data = await buildBackup();
   await saveFile('meowney-backup-' + todayStr() + '.json', JSON.stringify(data), 'application/json');
   S.app.lastBackup = Date.now(); saveApp(); toast('Backup saved'); 
 }
@@ -1922,7 +1926,7 @@ async function applyRestore() {
   const oldKeys = Object.keys(S.months);
   const months = {}; Object.keys(d.doc.months).forEach((k) => { if (/^\d{4}-\d{2}$/.test(k) && d.doc.months[k] && Array.isArray(d.doc.months[k].entries)) months[k] = d.doc.months[k]; });
   for (const k of oldKeys) { if (!months[k]) { try { await store.remove('m_' + k); } catch (e) { /* ignore */ } } }
-  S.app = normalizeApp(d.doc.app); S.months = months; rebuildIndex();
+  const keepDrive = S.app.settings.drive; S.app = normalizeApp(d.doc.app); if (keepDrive) S.app.settings.drive = keepDrive; S.months = months; rebuildIndex();
   if (!hosted() && S.mode === 'idb') { for (const a of Object.keys(d.bills || {})) { try { await idb.put('blobs', a, { type: d.bills[a].type, buf: b64ToBuf(d.bills[a].b64) }); } catch (e) { /* skip */ } } }
   saveApp(); Object.keys(S.months).forEach(saveMonth); S.restoreData = null; S.ui.nav = { entries: '', budgets: '' }; S.ui.stack = ['home']; S.ui.tab = 'home'; render(true); toast('Backup restored');
 }
@@ -2014,6 +2018,7 @@ Object.assign(ACT, {
   selmode: () => { S.sel = S.sel ? null : new Set(); S.sheet = null; render(); },
   selrow: (d) => { if (!S.sel) return; if (S.sel.has(d.id)) S.sel.delete(d.id); else S.sel.add(d.id); render(); },
   selall: () => { const key = S.ui.nav.entries || mk(todayStr()); const ids = filteredEntries(key).out.map((e) => e.id); const all = ids.length && ids.every((id) => S.sel.has(id)); S.sel = new Set(all ? [] : ids); render(); },
+  selclear: () => { S.sel = new Set(); render(); },
   selsimilar: () => { const one = S.idx[Array.from(S.sel)[0]]; if (!one) return; const n = normDesc(one.note); S.sel = new Set(live().filter((e) => listable(e) && normDesc(e.note) === n).map((e) => e.id)); toast(S.sel.size + ' entries share that description.'); },
   bulkdel: () => confirmSheet({ title: 'Delete ' + S.sel.size + ' entries?', body: 'They move to the trash for 30 days, and you can restore them from there.', ok: 'Move to trash', act: 'bulkdelgo', danger: true }),
   bulkdelgo: () => { const ids = selIds(); const snap = bulkSet(ids, (e) => { e.del = Date.now(); }); S.bulkUndo = snap; S.sel = null; S.sheet = null; toast(ids.length + ' entries moved to the trash.', 'bulkundo'); },
@@ -2327,6 +2332,8 @@ function normalizeV3(app) {
   if (app.settings.petAnim !== false) app.settings.petAnim = true;
   const sc = Array.isArray(app.settings.scard) ? app.settings.scard.filter((id, i, a) => SC_METRICS.some((m) => m[0] === id) && a.indexOf(id) === i).slice(0, 4) : [];
   app.settings.scard = sc.length ? sc : SC_DEFAULT.slice();
+  const dv = (app.settings.drive && typeof app.settings.drive === 'object') ? app.settings.drive : {}; const nn = (x) => (typeof x === 'number' && isFinite(x) ? x : 0);
+  app.settings.drive = { on: dv.on === true, auto: dv.auto !== false, email: typeof dv.email === 'string' ? dv.email : '', fileId: typeof dv.fileId === 'string' ? dv.fileId : '', remoteMod: typeof dv.remoteMod === 'string' ? dv.remoteMod : '', lastAt: nn(dv.lastAt), lastN: nn(dv.lastN), lastBytes: nn(dv.lastBytes), snoozeUntil: nn(dv.snoozeUntil), dismissed: nn(dv.dismissed), consented: dv.consented === true };
 }
 
 /* ---------- lines ---------- */
@@ -2883,6 +2890,188 @@ Object.assign(ACT, {
 });
 const _review = ACT.review; ACT.reviewlist = () => { S.sheet = null; _review(); };
 ACT.review = () => { S.sugSkip = {}; if (sugGroups().length) openSheet({ type: 'sugcat' }); else _review(); };
+
+/* ===== v5: Google Drive backup (opt-in, hidden app folder) ===== */
+const DRIVE_CLIENT_ID = '456628620565-7ebhktledcfg8f9jbhhhrkufkpvbb8jf.apps.googleusercontent.com';
+const DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.appdata';
+const DRIVE_FILE = 'meowney-backup.json';
+const DV = () => S.app.settings.drive;
+S.drv = { token: '', exp: 0, busy: false, err: null, conflict: null, pending: null, dirty: false, autoT: null };
+const driveErr = (kind, detail) => ({ drive: true, kind, detail: detail || '' });
+const asDriveErr = (e) => (e && e.drive ? e : driveErr('other', String((e && e.message) || e || '')));
+const DRV_MSG = {
+  offline: 'Could not reach Google. You look offline. Meowney will try again when you are back online.',
+  cancelled: 'Sign-in was closed, so nothing changed.',
+  denied: 'Google did not give access. If it says access is blocked, your Gmail needs to be added as a test user in the Google Cloud project.',
+  signin: 'Could not sign in to Google.',
+  gis: 'Google sign-in is still loading. Try again in a moment.',
+  expired: 'Paused. Sign in again to continue.',
+  full: 'Your Google Drive is full. Free some space, then try again.',
+  blocked: 'Google blocked Meowney’s access. Check Meowney under third-party access in your Google account, then sign in again.',
+  busy: 'Google is busy right now. Try again in a minute.',
+  none: 'No Meowney backup was found in this Google account.',
+  conflict: 'Drive already has a backup that did not come from this phone. Review it before anything is replaced.',
+  big: 'This backup is too big to send in one go. Remove some bill photos and try again.',
+  other: 'Something went wrong with Google Drive. Your data on this phone was not touched.'
+};
+const driveMsg = (e) => DRV_MSG[e.kind] + (e.kind === 'other' && e.detail ? ' (' + e.detail + ')' : '');
+const driveTokenOk = () => !!S.drv.token && Date.now() < S.drv.exp;
+const driveSize = (b) => (b >= 1048576 ? (b / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(b / 1024)) + ' KB');
+const driveAgo = (t) => { const dd = Math.floor((Date.now() - t) / 86400000); return dd <= 0 ? 'today' : dd === 1 ? 'yesterday' : dd + ' days ago'; };
+const driveStamp = (t) => dayLabel(ymd(new Date(t))) + ', ' + clockStr(new Date(t));
+function driveSub() { const d = DV(); if (!d.on) return 'Off · a copy in your own Drive'; if (!d.lastAt) return 'On · not backed up yet'; return 'On · last backup ' + driveAgo(d.lastAt); }
+
+/* ---- Google sign-in (script loads ahead of time so the popup opens inside the tap) ---- */
+let gisP = null;
+function driveGis() {
+  if (window.google && window.google.accounts && window.google.accounts.oauth2) return Promise.resolve();
+  if (gisP) return gisP;
+  gisP = new Promise((res, rej) => { try { const s = document.createElement('script'); s.src = 'https://accounts.google.com/gsi/client'; s.async = true; s.onload = () => res(); s.onerror = () => { gisP = null; rej(driveErr('offline')); }; document.head.appendChild(s); } catch (e) { gisP = null; rej(driveErr('signin')); } });
+  return gisP;
+}
+function driveToken() {
+  return new Promise((res, rej) => {
+    const g = window.google; if (!(g && g.accounts && g.accounts.oauth2)) { driveGis().then(() => render(), () => {}); rej(driveErr(navigator.onLine === false ? 'offline' : 'gis')); return; }
+    try {
+      const tc = g.accounts.oauth2.initTokenClient({ client_id: DRIVE_CLIENT_ID, scope: DRIVE_SCOPE,
+        callback: (r) => { if (r && r.access_token) { S.drv.token = r.access_token; S.drv.exp = Date.now() + (Number(r.expires_in) || 3600) * 1000 - 60000; DV().consented = true; res(r.access_token); } else rej(driveErr(r && r.error === 'access_denied' ? 'denied' : 'signin', r && r.error)); },
+        error_callback: (e) => rej(driveErr(e && (e.type === 'popup_closed' || e.type === 'popup_failed_to_open') ? 'cancelled' : 'signin', e && e.type)) });
+      tc.requestAccessToken({ prompt: DV().consented ? '' : 'consent' });
+    } catch (e) { rej(driveErr('signin')); }
+  });
+}
+const driveEnsure = () => (driveTokenOk() ? Promise.resolve() : driveToken());
+
+/* ---- Drive calls ---- */
+async function dfetch(url, opts) {
+  if (!driveTokenOk()) throw driveErr('expired');
+  let r; try { r = await fetch(url, Object.assign({}, opts, { headers: Object.assign({ Authorization: 'Bearer ' + S.drv.token }, (opts && opts.headers) || {}) })); } catch (e) { throw driveErr('offline'); }
+  if (r.ok) return r;
+  let reason = ''; try { const j = await r.clone().json(); reason = (j.error && j.error.errors && j.error.errors[0] && j.error.errors[0].reason) || (j.error && j.error.status) || ''; } catch (e) { /* no body */ }
+  if (r.status === 401) { S.drv.token = ''; throw driveErr('expired'); }
+  if (r.status === 403 && /quota/i.test(reason)) throw driveErr('full', reason);
+  if (r.status === 403) throw driveErr('blocked', reason);
+  if (r.status === 429 || r.status >= 500) throw driveErr('busy', String(r.status));
+  throw driveErr('other', r.status + (reason ? ' ' + reason : ''));
+}
+async function driveFind() {
+  const q = encodeURIComponent("name='" + DRIVE_FILE + "' and trashed=false");
+  const r = await dfetch('https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=' + q + '&fields=' + encodeURIComponent('files(id,modifiedTime,size)') + '&orderBy=' + encodeURIComponent('modifiedTime desc') + '&pageSize=5');
+  const j = await r.json(); return (j.files && j.files[0]) || null;
+}
+async function driveUpload(text, fileId) {
+  const bd = 'mwy' + Math.random().toString(36).slice(2); const meta = fileId ? {} : { name: DRIVE_FILE, parents: ['appDataFolder'] };
+  const body = '--' + bd + '\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n' + JSON.stringify(meta) + '\r\n--' + bd + '\r\nContent-Type: application/json\r\n\r\n' + text + '\r\n--' + bd + '--';
+  const r = await dfetch('https://www.googleapis.com/upload/drive/v3/files' + (fileId ? '/' + fileId : '') + '?uploadType=multipart&fields=' + encodeURIComponent('id,modifiedTime,size'), { method: fileId ? 'PATCH' : 'POST', headers: { 'Content-Type': 'multipart/related; boundary=' + bd }, body });
+  return r.json();
+}
+async function driveWho() { try { const r = await dfetch('https://www.googleapis.com/drive/v3/about?fields=' + encodeURIComponent('user(emailAddress)')); const j = await r.json(); return (j.user && j.user.emailAddress) || ''; } catch (e) { return ''; } }
+
+/* ---- backup, conflict, restore ---- */
+function driveConflict(remote, manual) {
+  S.drv.conflict = remote; S.drv.err = driveErr('conflict');
+  if (!manual) return;
+  openDriveConflict(remote);
+}
+function openDriveConflict(remote) {
+  const empty0 = live().length === 0;
+  confirmSheet({ title: 'Drive already has a backup', body: 'A backup from ' + esc(driveStamp(Date.parse(remote.modifiedTime) || Date.now())) + ' is already in your Drive.' + (empty0 ? ' This phone has no entries yet, so restoring it is probably what you want.' : ' Replacing it with this phone’s data cannot be undone.'), ok: 'Restore it', act: 'drvrestore', extra: '<button class="btn block' + (empty0 ? '' : ' danger') + '" data-act="drvreplace">Replace it with this phone’s data</button>' });
+}
+async function driveBackup(o) {
+  o = o || {}; if (S.drv.busy) return; S.drv.busy = true; if (!o.quiet) { S.drv.err = null; render(); }
+  try {
+    const d = DV(); const remote = await driveFind();
+    if (!o.force && remote && remote.modifiedTime !== d.remoteMod) { S.drv.busy = false; driveConflict(remote, !o.quiet); render(); return; }
+    const text = JSON.stringify(await buildBackup()); if (text.length > 150e6) throw driveErr('big');
+    let res; try { res = await driveUpload(text, remote ? remote.id : ''); } catch (e) { if (remote && e && e.detail && /^404/.test(e.detail)) res = await driveUpload(text, ''); else throw e; }
+    d.fileId = res.id || ''; d.remoteMod = res.modifiedTime || ''; d.lastAt = Date.now(); d.lastN = live().length; d.lastBytes = text.length; S.app.lastBackup = Date.now(); saveApp();
+    S.drv.err = null; S.drv.conflict = null; S.drv.dirty = false; if (!o.quiet) toast('Backed up to Google Drive');
+  } catch (e) { S.drv.err = asDriveErr(e); if (!o.quiet && S.drv.err.kind !== 'expired') toast(driveMsg(S.drv.err)); }
+  finally { S.drv.busy = false; render(); }
+}
+async function driveFetchRestore() {
+  const remote = await driveFind(); if (!remote) throw driveErr('none');
+  const r = await dfetch('https://www.googleapis.com/drive/v3/files/' + remote.id + '?alt=media'); const text = await r.text();
+  let d; try { d = JSON.parse(text); } catch (e) { throw driveErr('other', 'unreadable backup'); }
+  if (!d || d.kind !== 'finance-tracker-backup' || !d.doc || !d.doc.app || typeof d.doc.months !== 'object') throw driveErr('other', 'not a Meowney backup');
+  d.fromDrive = true; S.drv.pending = remote;
+  const n = Object.values(d.doc.months).reduce((s, m) => s + ((m && m.entries) || []).filter((e) => !e.del).length, 0);
+  S.restoreData = d; confirmSheet({ title: 'Replace everything with this Drive backup?', body: 'The backup from ' + esc(dayLabel(ymd(new Date(d.at || Date.now())))) + ' has ' + n + ' entries. Restoring replaces all entries, categories and settings on this phone. Your Drive copy stays as it is.', ok: 'Restore', act: 'restorego', danger: true });
+}
+const driveFail = (e) => { S.drv.err = asDriveErr(e); S.drv.busy = false; if (S.drv.err.kind !== 'cancelled') toast(driveMsg(S.drv.err)); else render(); };
+
+/* ---- automatic backup while signed in ---- */
+function driveMarkDirty() {
+  const d = DV(); if (!d || !d.on || !d.auto) return; S.drv.dirty = true; clearTimeout(S.drv.autoT); S.drv.autoT = setTimeout(driveAuto, 90000);
+}
+function driveAuto() {
+  const d = DV(); if (!d.on || !d.auto || !S.drv.dirty || S.drv.busy || S.loading) return;
+  if (!driveTokenOk()) { render(); return; }
+  if (navigator.onLine === false) return;
+  driveBackup({ quiet: true });
+}
+window.addEventListener('online', () => { try { if (S.drv.dirty) driveAuto(); } catch (e) { /* ignore */ } });
+try { const _qs = queueSave; queueSave = function (id, data) { _qs(id, data); try { driveMarkDirty(); } catch (e) { /* ignore */ } }; } catch (e) { /* ignore */ }
+
+/* ---- Home banners: Drive nudge, paused, or the old file reminder ---- */
+function backupBanners() {
+  const d = DV(); const now = Date.now(); const need = live().length >= 15 && now - (S.app.lastBackup || 0) > 30 * 86400000;
+  const fileB = '<div class="banner info"><div class="grow small"><b>Back up your data.</b> It lives only on this phone.</div><button class="btn sm" data-act="backup">Back up</button></div>';
+  if (hosted() || S.mode === 'db') return (S.mode !== 'db' && need) ? fileB : '';
+  if (d.on) {
+    driveGis().catch(() => {});
+    if (!driveTokenOk() && live().length > 0 && (!d.lastAt || now - d.lastAt > 3 * 86400000)) return '<div class="banner warn">' + ico('refresh-cw', 20) + '<div class="grow small"><b>Drive backup is paused.</b> Sign in to back up again.</div><button class="btn sm" data-act="drvsignin">Sign in</button></div>';
+    return '';
+  }
+  if (!need || now < d.snoozeUntil) return '';
+  if (d.dismissed < 2) return '<div class="banner info" style="padding-right:6px">' + ico('cloud', 20) + '<div class="grow small"><b>Back up to Google Drive.</b> Keeps your data safe if you lose this phone.</div><button class="btn sm" data-act="go" data-v="drive">Turn on</button><button class="ibtn soft" style="border:0" data-act="drvnudgex" aria-label="Not now">' + ico('x', 18) + '</button></div>';
+  return fileB;
+}
+
+/* ---- the Drive backup screen ---- */
+function vDrive() {
+  driveGis().catch(() => {});
+  const d = DV(); const e = S.drv.err; const busy = S.drv.busy; const okTok = driveTokenOk(); const top = backH('Google Drive backup');
+  const row = (ic, t, sub, extra) => '<div class="li"><span class="tile">' + ico(ic, 20) + '</span><div class="grow"><div style="font-weight:500">' + t + '</div>' + (sub ? '<div class="xs muted">' + sub + '</div>' : '') + '</div>' + (extra || '') + '</div>';
+  const banner = (cls, ic, txt, btn) => '<div class="banner ' + cls + '" role="alert">' + ico(ic, 20) + '<div class="grow small">' + txt + '</div>' + (btn || '') + '</div>';
+  if (!d.on) {
+    return top + (e && e.kind !== 'expired' ? banner('bad', 'cloud-off', esc(driveMsg(e))) : '') +
+      '<div class="card"><span class="tile l" style="--c:#4F46E5">' + ico('cloud', 22) + '</span><div class="h3 fd">Keep a copy in your own Google Drive</div><div class="small muted">Meowney saves one backup file in a hidden folder that only Meowney can open. You will not see it in Drive, and Meowney cannot see any of your other files.</div></div>' +
+      '<div class="card flush list">' + row('check', 'What is saved', 'Entries, categories, budgets, settings and bill photos') + row('lock', 'Who can read it', 'Only you, through this app') + row('rotate-ccw', 'New phone?', 'Sign in with the same Google account and restore') + '</div>' +
+      '<button class="btn primary block" data-act="drvon">Turn on Drive backup</button><div class="xs muted" style="text-align:center">Google asks you to allow this once. After the app restarts you tap Sign in again, because Google ends the sign-in after about an hour.</div>';
+  }
+  let bn = '';
+  if (e && e.kind === 'conflict') bn = banner('warn', 'cloud', esc(driveMsg(e)), '<button class="btn sm" data-act="drvreview">Review</button>');
+  else if (e && e.kind !== 'expired') bn = banner('bad', e.kind === 'offline' ? 'wifi-off' : 'cloud-off', esc(driveMsg(e)), '<button class="btn sm" data-act="' + (okTok ? 'drvbackup' : 'drvsignin') + '">Retry</button>');
+  else if (!okTok) { const n = live().filter((x) => (x.ts || 0) > d.lastAt).length; bn = banner('warn', 'refresh-cw', '<b>Paused. Sign in again to continue.</b>' + (d.lastAt && n ? ' ' + n + (n === 1 ? ' entry' : ' entries') + ' since the last backup.' : '')); }
+  const good = okTok && d.lastAt && !e;
+  const head = good ? ['cloud-check', '#0E9F8E', 'Backed up', esc(driveStamp(d.lastAt)) + ' · ' + d.lastN + ' entries · ' + driveSize(d.lastBytes)] : d.lastAt ? [e ? 'cloud-off' : 'cloud', e ? '#C2306A' : '#C77700', 'Last backup ' + driveAgo(d.lastAt), esc(driveStamp(d.lastAt)) + ' · ' + d.lastN + ' entries · ' + driveSize(d.lastBytes)] : ['cloud', '#C77700', 'Not backed up yet', 'Your first backup is one tap away.'];
+  const btn = okTok ? '<button class="btn primary block" data-act="drvbackup"' + (busy ? ' disabled' : '') + '>' + (busy ? 'Backing up…' : 'Back up now') + '</button>' : '<button class="btn primary block" data-act="drvsignin"' + (busy ? ' disabled' : '') + '>Sign in with Google</button>';
+  return top + bn + '<div class="card"><div class="row" style="gap:12px"><span class="tile l" style="--c:' + head[1] + '">' + ico(head[0], 22) + '</span><div class="grow"><div class="h3 fd">' + head[2] + '</div><div class="small muted">' + head[3] + '</div></div></div>' + btn + '</div>' +
+    '<div class="card flush list">' + row('user', 'Account', esc(d.email || 'Google account')) + row('refresh-cw', 'Back up after changes', 'While you are signed in', switchH(d.auto, 'drvauto', 'Back up after changes')) +
+    '<button class="li" data-act="drvrestore"><span class="tile">' + ico('rotate-ccw', 20) + '</span><div class="grow"><div style="font-weight:500">Restore from Drive</div><div class="xs muted">' + (okTok ? 'Replaces what is on this phone' : 'Needs sign in') + '</div></div>' + ico('fwd', 18) + '</button></div>' +
+    '<button class="btn block" style="color:var(--bad)" data-act="drvoff">' + ico('log-out', 18) + 'Turn off Drive backup</button><div class="xs muted" style="text-align:center">Turning off keeps the copy already in Drive. To remove Meowney’s access completely, use third-party access in your Google account.</div>';
+}
+VIEWS.drive = vDrive;
+
+/* ---- actions ---- */
+Object.assign(ACT, {
+  drvon: () => { const p = driveToken(); p.then(async () => { const d = DV(); d.on = true; saveApp(); d.email = await driveWho(); saveApp(); S.drv.err = null; render(); const remote = await driveFind(); if (remote && remote.modifiedTime !== d.remoteMod) { driveConflict(remote, true); render(); } else driveBackup({ force: true }); }).catch(driveFail); },
+  drvsignin: () => { const p = driveToken(); p.then(async () => { S.drv.err = null; const d = DV(); if (!d.email) { d.email = await driveWho(); saveApp(); } render(); if (S.drv.dirty || !d.lastAt || d.on) driveBackup({ quiet: false }); }).catch(driveFail); },
+  drvbackup: () => { if (driveTokenOk()) driveBackup(); else ACT.drvsignin(); },
+  drvrestore: () => { S.sheet = null; const p = driveEnsure(); p.then(() => driveFetchRestore()).then(() => render()).catch(driveFail); },
+  drvrestorefirst: () => ACT.drvrestore(),
+  drvreplace: () => { S.sheet = null; const p = driveEnsure(); p.then(() => { DV().on = true; return driveBackup({ force: true }); }).catch(driveFail); render(); },
+  drvreview: () => { if (S.drv.conflict) openDriveConflict(S.drv.conflict); else ACT.drvbackup(); },
+  drvoff: () => { const d = DV(); d.on = false; S.drv.token = ''; S.drv.exp = 0; S.drv.err = null; S.drv.dirty = false; clearTimeout(S.drv.autoT); saveApp(); toast('Drive backup is off. The copy in Drive stays.'); },
+  drvauto: () => { const d = DV(); d.auto = !d.auto; saveApp(); render(); },
+  drvnudgex: () => { const d = DV(); d.dismissed += 1; d.snoozeUntil = Date.now() + 30 * 86400000; saveApp(); toast('Okay. I’ll ask again in a month. You can turn it on in Settings.'); }
+});
+const _restorego = ACT.restorego;
+ACT.restorego = async () => {
+  const fromDrive = !!(S.restoreData && S.restoreData.fromDrive); const pr = S.drv.pending; await _restorego();
+  if (fromDrive && pr) { const d = DV(); d.on = true; d.consented = true; d.remoteMod = pr.modifiedTime || ''; d.fileId = pr.id || ''; d.lastAt = Date.now(); d.lastN = live().length; if (!d.email) d.email = ''; S.drv.pending = null; S.drv.err = null; saveApp(); render(); }
+};
 
 boot();
 
