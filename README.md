@@ -18,7 +18,7 @@ It works offline once opened.
 
 - **Add an entry in seconds:** a clean screen; tap the amount box for the calculator. As you type a note, earlier notes with those letters appear (any case); tap one to fill the note and category. Account, tags, bill photos and repeat sit below.
 - **Home:** this month's spending against your budget, how it compares with the same days last month, and a ring showing where the money went. Your pet greets you when you open the app and peeks over the card to talk. Tap the pet for another note.
-- **Entries:** browse by month, search, trash with undo. Press and hold the small icon box of an entry to select several, then change their category or tags in one go. The bar at the bottom has an X to leave selection, **Clear** to un-tick everything and **Select all**. "Sort" suggests a category for entries that need one (from notes you already sorted), and you accept, skip or undo.
+- **Entries:** browse by month, search, trash with undo. Press and hold the small icon box of an entry to select several, then change their category or tags in one go. The bar at the bottom has an X to leave selection, **Clear** to un-tick everything and **Select all**. The Android back button closes selection or an open sheet first. "Sort" suggests a category for entries that need one (from notes you already sorted), and you accept, skip or undo.
 - **Budgets:** one monthly number and optional category budgets. The pet rides each progress bar and reacts to your pace.
 - **Insights:** a scorecard you choose (4 of 9), spending by category with month or quarter detail, fixed vs flexible, day of week, "was it worth it", more breakdowns (account, top notes, tags, income sources, part of the month, entry size) and a weekly pet recap you can replay. Tap a category, a weekday or a breakdown row to see the entries behind it.
 - **Pets:** cat, panda, penguin or puppy. Pick one or several (a different one greets you each time). The cat has extra poses: waving on Home, a coin, a piggy bank and more on the scorecard, and pushing a block on Budgets bars. Choose a personality: sassy, sweet, funny, bossy, mixed, or silent.
@@ -54,6 +54,7 @@ This repository holds the finished app, with no build step. To update, replace t
 | `manifest.webmanifest` | Name, colours and icons for installing |
 | `icon-192.png`, `icon-512.png`, `icon-maskable-512.png` | App icons |
 | `dmsans.woff2`, `fredoka.woff2` | Fonts |
+| `privacy.html` | Privacy policy page (linked from the Google sign-in screen) |
 | `README.md` | This file |
 
 ## Privacy

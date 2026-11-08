@@ -1651,7 +1651,7 @@ function render(reset) {
   if (S.loading) { app.innerHTML = '<div class="main"><div class="card"><div class="fd h3">Loading your finances…</div><div class="small muted">One moment.</div></div></div>'; return; }
   const v = curView(); const html = (VIEWS[v] || vHome)(); const nav = TABS.indexOf(v) >= 0 && S.ui.stack.length === 1;
   app.innerHTML = '<div class="main">' + html + '</div>' + (nav && !(S.sel && v === 'entries') ? navHtml() : '') + overlays();
-  window.scrollTo(0, reset ? 0 : y); hydrateBlobs(); pmAfterRender();
+  window.scrollTo(0, reset ? 0 : y); hydrateBlobs(); pmAfterRender(); try { ovSync(); } catch (e) { /* ignore */ }
   if (aid) { const el = document.getElementById(aid); if (el && el !== document.activeElement) { try { el.focus({ preventScroll: true }); if (ss != null && el.setSelectionRange) el.setSelectionRange(ss, se); } catch (e) { /* ignore */ } } }
 }
 function pushHist() { try { history.pushState({ n: S.ui.stack.length }, ''); histPushed++; } catch (e) { /* ignore */ } }
@@ -1668,10 +1668,28 @@ function cleanupView(v) {
   if (v === 'import') { S.imp = null; }
 }
 function popView() { if (S.ui.stack.length > 1) { const v = S.ui.stack.pop(); cleanupView(v); S.ui.params = {}; } render(true); }
-function back() { popView(); if (histPushed > 0) { skipPop++; histPushed--; try { history.back(); } catch (e) { skipPop = 0; } } }
+function back() { popView(); if (histPushed > 0) { skipPop++; skipAt = Date.now(); histPushed--; try { history.back(); } catch (e) { skipPop = 0; } } }
+/* Overlay layers (selection mode, sheets, viewers) each own one history entry, so the Android back button closes the top layer first. */
+let ovPushed = 0;
+const ovLevels = () => (S.sel ? 1 : 0) + ((S.sheet || S.petov || S.viewer || S.story) ? 1 : 0);
+let ovTimer = null, skipAt = 0;
+function ovSync() {
+  const want = ovLevels();
+  while (ovPushed < want) { pushHist(); ovPushed++; }
+  if (ovPushed > want && !ovTimer) ovTimer = setTimeout(() => {
+    ovTimer = null; const w2 = ovLevels();
+    while (ovPushed > w2) { ovPushed--; if (histPushed > 0) { skipPop++; skipAt = Date.now(); histPushed--; try { history.back(); } catch (e) { skipPop = 0; } } }
+  }, 60);
+}
 window.addEventListener('popstate', () => {
+  if (skipPop > 0 && Date.now() - skipAt > 1500) skipPop = 0;
   if (skipPop > 0) { skipPop--; return; }
   if (histPushed > 0) histPushed--;
+  if (ovPushed > 0 && !S.tour) {
+    ovPushed--;
+    if (S.sheet || S.petov || S.viewer || S.story) { S.sheet = null; S.petov = null; S.viewer = null; S.story = null; } else if (S.sel) S.sel = null;
+    render(); return;
+  }
   if (S.sheet || S.petov || S.viewer || S.story || S.tour) { S.sheet = null; S.petov = null; S.viewer = null; S.story = null; if (S.tour) { tourClose(); return; } pushHist(); render(); return; }
   if (S.ui.stack.length > 1) popView();
 });
@@ -2369,7 +2387,9 @@ function trigCands(e) {
 }
 function pickRecent(bucket, pool, vars) {
   const rec = S.app.recent || (S.app.recent = []); const okIdx = pool.map((_, i) => i).filter((i) => needsOk(pool[i], vars));
-  const fresh = okIdx.filter((i) => rec.indexOf(bucket + '#' + i) < 0); const from = fresh.length ? fresh : okIdx; if (!from.length) return '';
+  const fresh = okIdx.filter((i) => rec.indexOf(bucket + '#' + i) < 0); let from = fresh;
+  if (!from.length) { let li = -1; for (let j = rec.length - 1; j >= 0; j--) { if (rec[j].indexOf(bucket + '#') === 0) { li = Number(rec[j].slice(bucket.length + 1)); break; } } from = okIdx.filter((i) => i !== li); if (!from.length) from = okIdx; }
+  if (!from.length) return '';
   const i = from[Math.floor(Math.random() * from.length)]; rec.push(bucket + '#' + i); while (rec.length > 60) rec.shift(); return fillT(pool[i], vars);
 }
 function petLine(mood, over, e, pd) {
@@ -2461,7 +2481,7 @@ function ivDelta(cur, prev, hasPrev) {
 }
 function ivQ(k) { return k.slice(0, 4) + '-Q' + (Math.floor((Number(k.slice(5, 7)) - 1) / 3) + 1); }
 function ivBk(k, qm) { return qm ? ivQ(k) : k; }
-function ivBLab(k) { return /Q\d$/.test(k) ? 'Q' + k.slice(-1) : monShort(k); }
+function ivBLab(k, i) { if (!/Q\d$/.test(k)) return monShort(k); const n = k.slice(-1); return 'Q' + n + (i === 0 || n === '1' ? '<br>’' + k.slice(2, 4) : ''); }
 function ivMonthKeys(r) { const a = mk(r.from), b = mk(r.to); const keys = []; for (let k = a; k <= b && keys.length < 120; k = addMonths(k, 1)) keys.push(k); if (keys.length > 6) { const qs = []; keys.forEach((k) => { const q = ivQ(k); if (qs[qs.length - 1] !== q) qs.push(q); }); return qs.slice(-6); } return keys; }
 function ivCatCard(D) {
   const r = D.r; const multi = mk(r.from) !== mk(r.to); const flex = !!S.ui.catFlex; const months = multi && !!S.ui.catMonths;
@@ -2470,7 +2490,7 @@ function ivCatCard(D) {
   ids.sort((a, b) => D.cc[b] - D.cc[a]); const total = sum(ids, (id) => D.cc[id]); const all = !!S.ui.catAll; const top = all ? ids : ids.slice(0, 8); const mx = top.length ? D.cc[top[0]] : 1;
   const mkeys = months ? ivMonthKeys(r) : []; const qm = mkeys.length > 0 && /Q\d$/.test(mkeys[0]); const byM = {}; if (months) D.cur.filter((e) => e.t === 'e').forEach((e) => { const id = e.cat || 'other'; const k = ivBk(mk(e.date), qm); byM[id] = byM[id] || {}; byM[id][k] = (byM[id][k] || 0) + e.amt; });
   const inv = ids.indexOf('invest') >= 0 ? D.cc.invest || 0 : 0; const tag = mk(D.c.from) === mk(D.c.to) ? monShort(mk(D.c.from)) : 'the previous period';
-  const hdr = months ? '<div class="iv-mh"><span style="width:38px"></span><div>' + mkeys.map((k) => '<span' + (k === ivBk(mk(r.to), qm) ? ' style="color:var(--ink);font-weight:700"' : '') + '>' + (qm ? ivBLab(k) : monShort(k).slice(0, 1)) + '</span>').join('') + '</div><span style="width:96px"></span></div>' : '';
+  const hdr = months ? '<div class="iv-mh"><span style="width:38px"></span><div>' + mkeys.map((k, i) => '<span' + (k === ivBk(mk(r.to), qm) ? ' style="color:var(--ink);font-weight:700"' : '') + '>' + (qm ? ivBLab(k, i) : monShort(k).slice(0, 1)) + '</span>').join('') + '</div><span style="width:96px"></span></div>' : '';
   const rows = top.map((id) => {
     const c = catById(id); let strip = '';
     if (months) { const vals = mkeys.map((k) => (byM[id] && byM[id][k]) || 0); const hi = Math.max.apply(null, vals), lo = Math.min.apply(null, vals); strip = '<div class="iv-cells" role="img" aria-label="' + esc(c.name + ' by month: ' + mkeys.map((k, i) => ivBLab(k) + ' ' + fmt(vals[i], { round: true })).join(', ')) + '" style="--c:' + esc(c.color) + '">' + vals.map((v) => '<i style="opacity:' + (hi === lo ? 0.2 : (0.16 + 0.84 * ((v - lo) / (hi - lo))).toFixed(2)) + '"></i>').join('') + '</div>'; }
